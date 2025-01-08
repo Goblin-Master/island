@@ -15,7 +15,7 @@ type MyClaims struct {
 	jwt.RegisteredClaims
 }
 
-var mySecret = []byte("AchoBeta")
+var mySecret = []byte("island")
 
 type TokenData struct {
 	Userid int64
