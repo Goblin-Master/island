@@ -1,11 +1,13 @@
 package initalize
 
 import (
+	"tgwp/cmd/flags"
 	"tgwp/global"
 	"tgwp/util"
 )
 
 func Init() {
+	flags.Parse()
 	introduce()
 	InitLog(global.Config)
 	InitPath()
@@ -13,6 +15,7 @@ func Init() {
 	InitLog(global.Config)
 	InitDataBase(*global.Config)
 	InitRedis(*global.Config)
+	flags.Run() // 会通过特殊手段执行数据库表的迁移
 }
 func InitPath() {
 	global.Path = util.GetRootPath("")
