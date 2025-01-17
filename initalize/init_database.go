@@ -20,15 +20,10 @@ func InitDataBase(config configs.Config) {
 	}
 	if config.App.Env != "pro" {
 		err := global.DB.AutoMigrate()
-
-		//迁移数据库所有的表
-		migrateTables()
-
 		if err != nil {
 			zlog.Fatalf("数据库迁移失败！")
 		}
 	}
-	zlog.Infof("数据库初始化成功！")
 }
 func InitRedis(config configs.Config) {
 	if config.Redis.Enable {
@@ -41,9 +36,4 @@ func InitRedis(config configs.Config) {
 		zlog.Warnf("不使用Redis")
 	}
 
-}
-
-func migrateTables() {
-	//自动迁移某一个表，确保表结构存在
-	//global.DB.AutoMigrate(&model.xxx)
 }

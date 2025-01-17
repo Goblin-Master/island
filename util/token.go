@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/golang-jwt/jwt/v4"
+	"strings"
 	"tgwp/global"
 	"tgwp/log/zlog"
 	"time"
@@ -11,7 +12,7 @@ import (
 
 type MyClaims struct {
 	Userid int64  `json:"userid"`
-	Type   string `json:"type"`
+	Class  string `json:"class"`
 	jwt.RegisteredClaims
 }
 
@@ -20,7 +21,6 @@ var mySecret = []byte("island")
 type TokenData struct {
 	Userid int64
 	Class  string
-	Issuer string
 	Time   time.Duration
 }
 
@@ -32,7 +32,6 @@ func GenToken(data TokenData) (string, error) {
 		jwt.RegisteredClaims{
 			NotBefore: jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(data.Time)), // 过期时间
-			Issuer:    data.Issuer,                                   // 签发人
 		},
 	}
 	// 使用指定的签名方法创建签名对象
@@ -44,13 +43,25 @@ func GenToken(data TokenData) (string, error) {
 // ParseToken 解析JWT
 func ParseToken(tokenString string) (*MyClaims, error) {
 	// 解析token
-	token, err := jwt.ParseWithClaims(tokenString, &MyClaims{}, func(token *jwt.Token) (i interface{}, err error) {
+	if tokenString == "" {
+		return nil, errors.New("token为空")
+	}
+	token, err := jwt.ParseWithClaims(tokenString, &MyClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return mySecret, nil
 	})
 	if err != nil {
+		if strings.Contains(err.Error(), "token is expired") {
+			return nil, errors.New("token已过期")
+		}
+		if strings.Contains(err.Error(), "signature is invalid") {
+			return nil, errors.New("token无效")
+		}
+		if strings.Contains(err.Error(), "token contains an invalid") {
+			return nil, errors.New("token非法")
+		}
 		return nil, err
 	}
-	if claims, ok := token.Claims.(*MyClaims); ok && token.Valid { // 校验token
+	if claims, ok := token.Claims.(*MyClaims); ok && token.Valid {
 		return claims, nil
 	}
 	return nil, errors.New("invalid token")
@@ -66,9 +77,8 @@ func IdentifyToken(ctx context.Context, Token string) (TokenData, error) {
 		return TokenData{}, err
 	}
 	data.Userid = claim.Userid
-	data.Issuer = claim.Issuer
-	data.Class = claim.Type
-	if claim.Type == global.AUTH_ENUMS_RTOKEN {
+	data.Class = claim.Class
+	if claim.Class == global.AUTH_ENUMS_RTOKEN {
 		data.Time = global.RTOKEN_EFFECTIVE_TIME - time.Duration(time.Now().Unix()-claim.RegisteredClaims.NotBefore.Unix())
 	} else {
 		data.Time = global.ATOKEN_EFFECTIVE_TIME
@@ -76,10 +86,9 @@ func IdentifyToken(ctx context.Context, Token string) (TokenData, error) {
 	return data, nil
 }
 
-func FullToken(class, issuer string, user_id int64) (data TokenData) {
+func FullToken(class string, userid int64) (data TokenData) {
 	//后期这两个都由雪花算法生成
-	data.Issuer = issuer
-	data.Userid = user_id
+	data.Userid = userid
 	if class == global.AUTH_ENUMS_ATOKEN {
 		data.Time = global.ATOKEN_EFFECTIVE_TIME
 		data.Class = global.AUTH_ENUMS_ATOKEN
