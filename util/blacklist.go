@@ -60,6 +60,10 @@ func HasTokenBlack(ctx context.Context, token string) (value BlackType, exist bo
 	key := fmt.Sprintf("token_black_%s", token)
 	res, err := global.Rdb.Get(ctx, key).Result()
 	if err != nil {
+		if err.Error() == "redis: nil" {
+			// 黑名单不存在对象
+			return value, false, nil
+		}
 		zlog.CtxErrorf(ctx, "redis获取黑名单错误:%v", err)
 		return value, false, err
 	}
