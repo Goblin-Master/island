@@ -1,7 +1,7 @@
 package global
 
 import (
-	"tgwp/util/snowflake"
+	"tgwp/utils/snowflake"
 	"time"
 )
 

@@ -11,12 +11,12 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"tgwp/util"
+	"tgwp/utils"
 	"time"
 )
 
 func InitLogger() {
-	hook := NewLfsHook(util.GetRootPath("log/logfiles/api.log"), nil, 10)
+	hook := NewLfsHook(utils.GetRootPath("log/logfiles/api.log"), nil, 10)
 	logrus.AddHook(hook)
 
 	logrus.SetFormatter(formatter(true))

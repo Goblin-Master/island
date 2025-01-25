@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"tgwp/global"
 	"tgwp/log/zlog"
-	"tgwp/util/jwtUtils"
+	"tgwp/utils/jwtUtils"
 	"time"
 )
 
