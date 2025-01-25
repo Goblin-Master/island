@@ -3,14 +3,21 @@ package fileUtils
 import (
 	"errors"
 	"strings"
+	"tgwp/utils/listUtils"
 )
 
-func SuffixJudge(fileName string) (suffix string, err error) {
+var whiteList = []string{"jpg","png","jpeg","gif","webp"} 
+func ImageSuffixJudge(fileName string) (suffix string, err error) {
 	_list := strings.Split(fileName, ".")
-	if len(_list) > 1 {
-		suffix = _list[len(_list)-1]
-	} else {
-		err = errors.New("文件名错误")
+	length:= len(_list)
+	if length==1{
+		err=errors.New("文件名错误")
+		return
+	}
+	suffix = _list[length-1]
+	if !listUtils.InList(whiteList,suffix){
+		err=errors.New("文件格式错误")
+		return
 	}
 	return
 }
