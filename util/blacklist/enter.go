@@ -1,10 +1,11 @@
-package util
+package blacklist
 
 import (
 	"context"
 	"fmt"
 	"tgwp/global"
 	"tgwp/log/zlog"
+	"tgwp/util/jwtUtils"
 	"time"
 )
 
@@ -43,7 +44,7 @@ func (b BlackType) Msg() string {
 }
 func TokenBlack(ctx context.Context, token string, value BlackType) error {
 	key := fmt.Sprintf("token_black_%s", token)
-	claims, err := ParseToken(token)
+	claims, err := jwtUtils.ParseToken(token)
 	if err != nil || claims == nil {
 		return err
 	}
