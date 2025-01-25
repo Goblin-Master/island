@@ -5,7 +5,7 @@ import (
 	"go.uber.org/zap"
 	"tgwp/global"
 	"tgwp/log/zlog"
-	"tgwp/util/snowflake"
+	"tgwp/utils/snowflake"
 )
 
 // AddTraceId 是一个用于生成或获取 Trace ID 的中间件

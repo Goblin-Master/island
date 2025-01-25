@@ -3,7 +3,7 @@ package model
 import (
 	"gorm.io/gorm"
 	"tgwp/global"
-	"tgwp/util/snowflake"
+	"tgwp/utils/snowflake"
 	"time"
 )
 

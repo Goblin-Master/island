@@ -3,7 +3,7 @@ package initalize
 import (
 	"tgwp/cmd/flags"
 	"tgwp/global"
-	"tgwp/util"
+	"tgwp/utils"
 )
 
 func Init() {
@@ -18,5 +18,5 @@ func Init() {
 	flags.Run() // 会通过特殊手段执行数据库表的迁移
 }
 func InitPath() {
-	global.Path = util.GetRootPath("")
+	global.Path = utils.GetRootPath("")
 }

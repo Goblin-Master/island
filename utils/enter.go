@@ -1,4 +1,4 @@
-package util
+package utils
 
 import (
 	"encoding/json"
@@ -95,7 +95,7 @@ func IdentifyPhone(phone string) bool {
 }
 
 // RecordTime a tool to record time
-// e.g [defer util.RecordTime(time.Now())()]
+// e.g [defer utils.RecordTime(time.Now())()]
 func RecordTime(start time.Time) func() {
 	return func() {
 		end := time.Now()

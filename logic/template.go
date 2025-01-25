@@ -7,8 +7,8 @@ import (
 	"tgwp/repo"
 	"tgwp/response"
 	"tgwp/types"
-	"tgwp/util"
-	"tgwp/util/snowflake"
+	"tgwp/utils"
+	"tgwp/utils/snowflake"
 	"time"
 )
 
@@ -25,7 +25,7 @@ const (
 )
 
 func (l *TemplateLogic) Way(ctx context.Context, req types.TemplateReq) (resp types.TemplateResp, err error) {
-	defer util.RecordTime(time.Now())()
+	defer utils.RecordTime(time.Now())()
 	//雪花id的生成格式
 	node, err := snowflake.NewNode(global.DEFAULT_NODE_ID)
 	if err != nil {
