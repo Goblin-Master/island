@@ -2,9 +2,12 @@ package util
 
 import (
 	"encoding/json"
+	"math/rand"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"tgwp/log/zlog"
+	"time"
 )
 
 /*
@@ -65,4 +68,37 @@ func StuctToJson(value interface{}) (string, error) {
 //	@return error
 func JsonToStruct(str string, value interface{}) error {
 	return json.Unmarshal([]byte(str), value)
+}
+
+// RandomCode
+//
+//	@Description: 生成随机码
+//	@return string
+func RandomCode() string {
+	const charset = "0123456789abcdefghijklmnopqrlstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	result := make([]byte, 6)
+	rand.Seed(time.Now().UnixNano())
+	for i := range result {
+		result[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(result)
+}
+
+// IdentifyPhone
+//
+//	@Description: 判定是否为中国手机号
+//	@param phone
+//	@return bool
+func IdentifyPhone(phone string) bool {
+	var phoneRegex = regexp.MustCompile(`^1(3[0-9]|4[57]|5[0-35-9]|7[0-9]|8[0-9]|9[8])\d{8}$`)
+	return phoneRegex.MatchString(phone)
+}
+
+// RecordTime a tool to record time
+// e.g [defer util.RecordTime(time.Now())()]
+func RecordTime(start time.Time) func() {
+	return func() {
+		end := time.Now()
+		zlog.Debugf("use time:%d", end.Unix()-start.Unix())
+	}
 }
