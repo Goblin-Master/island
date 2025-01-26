@@ -6,7 +6,7 @@ import (
 	"tgwp/global"
 )
 
-// **********************通用的列表查询********************************
+/*                             通用的列表查询                              */
 type PageInfo struct {
 	Limit int    `form:"limit"`
 	Page  int    `form:"page"`
@@ -83,4 +83,9 @@ func ListQuery[T any](model T, option Options) (list []T, count int, err error) 
 	}
 	err = query.Offset(offset).Limit(limit).Find(&list).Error
 	return
+}
+
+// 用于绑定的id列表
+type RemoveReq struct {
+	Ids []int `json:"ids"`
 }

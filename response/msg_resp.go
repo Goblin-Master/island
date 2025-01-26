@@ -48,6 +48,13 @@ var (
 	INSUFFICENT_PERMISSIONS    = MsgCode{20403, "权限不足"}
 	FEISHU_OPENID_NOT_EXIST    = MsgCode{20008, "该用户手机号未绑定飞书"}
 
+	/* 图片错误 30000 ~ 39999 */
+	IMAGE_NOT_EXIST    = MsgCode{30001, "图片不存在"}
+	IMAGE_UPLOAD_ERROR = MsgCode{30002, "图片上传失败"}
+	IMAGE_DELETE_ERROR = MsgCode{30003, "图片删除失败"}
+	IMAGE_NOT_SUPPORT  = MsgCode{30004, "不支持该图片格式"}
+	IMAGE_OVER_SIZE    = MsgCode{30005, "图片大小超出限制"}
+	IMAGE_NOT_OPEN     = MsgCode{30006, "图片打开失败"}
 	/*
 	 USER_ACCOUNT_DISABLE(20005, "账号不可用"),
 	 USER_ACCOUNT_LOCKED(20006, "账号被锁定"),
