@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
 	"tgwp/global"
 	"tgwp/response"
 	"tgwp/types"
@@ -48,4 +49,19 @@ func (l *TokenLogic) RefreshToken(ctx context.Context, req types.TokenReq) (resp
 		return resp, response.ErrResp(err, response.GENERATE_TOKEN_ERROR)
 	}
 	return resp, nil
+}
+
+// GetUserId
+//
+//	@Description: 这个方法只能是使用了鉴权中间件才能用
+//	@param c
+//	@return int64
+func GetUserId(c *gin.Context) int64 {
+	if data, exists := c.Get(global.TOKEN_USER_ID); exists {
+		userid, ok := data.(int64)
+		if ok {
+			return userid
+		}
+	}
+	return 0
 }
