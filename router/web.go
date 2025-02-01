@@ -42,4 +42,8 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.DELETE("/images", api.DeleteImages)
 		rg.GET("/images", api.GetImages)
 	})
+
+	routeManager.RegisterLoginRoutes(func(rg *gin.RouterGroup) {
+		rg.POST("/qq", api.QQLogin)
+	})
 }

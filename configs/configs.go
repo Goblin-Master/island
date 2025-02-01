@@ -7,6 +7,7 @@ type Config struct {
 	Log   LoggerConfig      `mapstructure:"log"`
 	DB    DBConfig          `mapstructure:"database"`
 	Redis RedisConfig       `mapstructure:"redis"`
+	QQ    QQConfig          `mapstructure:"qq"`
 }
 
 type ApplicationConfig struct {
@@ -38,4 +39,10 @@ type RedisConfig struct {
 type KafkaConfig struct {
 	host string `mapstructure:"host"`
 	port int    `mapstructure:"port"`
+}
+
+type QQConfig struct {
+	AppID       string `mapstructure:"appID"`
+	AppKey      string `mapstructure:"appKey"`
+	RedirectUrl string `mapstructure:"redirectUrl"`
 }
