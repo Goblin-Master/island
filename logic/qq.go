@@ -11,6 +11,7 @@ import (
 	"tgwp/response"
 	"tgwp/types"
 	"tgwp/utils"
+	"tgwp/utils/jwtUtils"
 	"tgwp/utils/qqLogin"
 	"tgwp/utils/snowflake"
 	"time"
@@ -59,10 +60,20 @@ func (r *QQLoginLogic) QQLogin(ctx context.Context, req types.QQLoginReq) (types
 		}
 	}
 	// 颁发token
+	atoken, err := jwtUtils.GenToken(jwtUtils.FullToken(global.AUTH_ENUMS_ATOKEN, userid))
+	if err != nil {
+		zlog.CtxErrorf(ctx, "GenToken err: %v", err)
+		return types.QQLoginResp{}, response.ErrResp(err, response.GENERATE_TOKEN_ERROR)
+	}
+	rtoken, err := jwtUtils.GenToken(jwtUtils.FullToken(global.AUTH_ENUMS_RTOKEN, userid))
+	if err != nil {
+		zlog.CtxErrorf(ctx, "GenToken err: %v", err)
+		return types.QQLoginResp{}, response.ErrResp(err, response.GENERATE_TOKEN_ERROR)
+	}
 	return types.QQLoginResp{
-		Atoken:   "",
+		Atoken:   atoken,
 		Avatar:   info.Avatar,
-		Rtoken:   "",
+		Rtoken:   rtoken,
 		Username: info.Nickname,
 	}, nil
 }
