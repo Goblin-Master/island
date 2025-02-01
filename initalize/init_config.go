@@ -44,6 +44,5 @@ func InitConfig() {
 	if err := viper.Unmarshal(&configs.Conf); err != nil {
 		zlog.Panicf("无法解析配置文件 err: %v", err)
 	}
-	zlog.Debugf("配置文件为 ： %+v", configs.Conf)
 	global.Config = configs.Conf
 }
