@@ -38,6 +38,7 @@ func registerRoutes(routeManager *manager.RouteManager) {
 
 	routeManager.RegisterCommonRoutes(func(rg *gin.RouterGroup) {
 		rg.GET("/test", api.Template)
+		rg.POST("/token", api.RefreshToken)
 		rg.POST("/images", api.UploadImages)
 		rg.DELETE("/images", api.DeleteImages)
 		rg.GET("/images", api.GetImages)
