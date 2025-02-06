@@ -7,12 +7,12 @@ import (
 	"tgwp/global"
 	"tgwp/log/zlog"
 	"tgwp/model"
+	"tgwp/pkg/qqLogin"
 	"tgwp/repo"
 	"tgwp/response"
 	"tgwp/types"
 	"tgwp/utils"
 	"tgwp/utils/jwtUtils"
-	"tgwp/utils/qqLogin"
 	"tgwp/utils/snowflake"
 	"time"
 )
