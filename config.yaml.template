@@ -1,0 +1,29 @@
+app:
+  port: 8080
+  host: 0.0.0.0
+  env: dev
+  logfiles: /logs
+
+log:
+  level: 0
+  format: plain
+  director: /logs
+  show-line: true
+
+redis:
+  enable: true
+  host: localhost
+  port: 6379
+  password:
+  db: 0
+
+database:
+  driver: mysql
+  migrate: true
+  # use dsn
+  dsn: root:123456@tcp(localhost:3307)/island?charset=utf8mb4&parseTime=True&loc=Local&timeout=1000ms
+
+qq:
+  appID: 0
+  appKey: 0
+  redirectUri: http://127.0.0.*/1:8080/qq/callback
