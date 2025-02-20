@@ -24,7 +24,7 @@ func (i *Image) TableName() string {
 	return "image"
 }
 func (i *Image) WebPath() string {
-	return fmt.Sprintf("http://127.0.0.1:%d/%s", configs.Conf.App.Port, i.Path)
+	return fmt.Sprintf("http://%s:%d/%s", configs.Conf.App.ImagesPath, configs.Conf.App.Port, i.Path)
 }
 
 func (i *Image) BeforeDelete(tx *gorm.DB) (err error) {

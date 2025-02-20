@@ -3,6 +3,7 @@ app:
   host: 0.0.0.0
   env: dev
   logfiles: /logs
+  ImagesPath: 存放图片的本地机器路径
 
 log:
   level: 0
