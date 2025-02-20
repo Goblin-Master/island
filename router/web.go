@@ -49,8 +49,9 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	})
 
 	routeManager.RegisterIslandRoutes(func(rg *gin.RouterGroup) {
-		rg.GET("/", api.GetIsland)     //获取岛屿列表
-		rg.POST("/", api.CreateIsland) //创建岛屿
-		rg.PUT("/", api.ModifyIsland)  //修改岛屿
+		rg.GET("/", api.GetIsland)       //获取岛屿列表
+		rg.POST("/", api.CreateIsland)   //创建岛屿
+		rg.PUT("/", api.ModifyIsland)    //修改岛屿
+		rg.DELETE("/", api.DeleteIsland) //删除岛屿
 	})
 }

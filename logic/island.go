@@ -123,3 +123,14 @@ func (l *IslandLogic) ModifyIsland(ctx context.Context, req types.IslandReq) (re
 	}
 	return
 }
+func (l *IslandLogic) DeleteIsland(ctx context.Context, res types.IslandDeleteReq) (err error) {
+	defer utils.RecordTime(time.Now())()
+	// TODO:创建岛屿得登录，拿用户的id
+	userid := int64(793478004095)
+	err = repo.NewIslandRepo(global.DB).DeleteIsland(res.ID, userid)
+	if err != nil {
+		zlog.CtxInfof(ctx, "删除岛屿失败:%v", err)
+		return response.ErrResp(err, response.ISLAND_DELETE_ERROR)
+	}
+	return
+}

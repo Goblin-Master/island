@@ -28,3 +28,6 @@ type IslandListResp struct {
 	List  []ListReq `json:"list"`
 	Count int       `json:"count"`
 }
+type IslandDeleteReq struct {
+	ID int64 `form:"id"`
+}

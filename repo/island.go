@@ -40,3 +40,12 @@ func (r *IslandRepo) IdentifyIslandById(id, userid int64) (exist bool) {
 	}
 	return
 }
+func (r *IslandRepo) DeleteIsland(id, userid int64) (err error) {
+	var island model.Island
+	err = r.DB.Where("id = ? and userid = ?", id, userid).Take(&island).Error
+	if err != nil {
+		return
+	}
+	err = r.DB.Delete(&island).Error
+	return
+}
