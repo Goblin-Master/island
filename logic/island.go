@@ -98,11 +98,12 @@ func (l *IslandLogic) ModifyIsland(ctx context.Context, req types.IslandReq) (re
 		zlog.CtxInfof(ctx, "修改岛屿权限不足:%v", err)
 		return types.IslandResp{}, response.ErrResp(err, response.ISLAND_NOT_UPDATE)
 	}
-	if r.IdentifyIslandName(req.Name) {
+	if r.IdentifyIslandNameAndId(req.Name, req.ID) {
 		zlog.CtxInfof(ctx, "岛屿名字重复:%v", err)
 		return types.IslandResp{}, response.ErrResp(err, response.ISLAND_EXIST)
 	}
 	var island = model.Island{
+		ID:     req.ID,
 		Name:   req.Name,
 		Path:   req.Path,
 		Height: req.Height,

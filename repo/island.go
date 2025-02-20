@@ -31,7 +31,14 @@ func (r *IslandRepo) IdentifyIslandName(name string) (exist bool) {
 	}
 	return
 }
-
+func (r *IslandRepo) IdentifyIslandNameAndId(name string, id int64) (exist bool) {
+	var island model.Island
+	err := r.DB.Where("name = ? and id <> ?", name, id).Take(&island).Error
+	if err == nil {
+		exist = true
+	}
+	return
+}
 func (r *IslandRepo) IdentifyIslandById(id, userid int64) (exist bool) {
 	var island model.Island
 	err := r.DB.Where("id = ? and userid = ?", id, userid).Take(&island).Error
