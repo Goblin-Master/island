@@ -9,6 +9,6 @@ type ImageResp struct {
 	WebPath  string `json:"webPath"`
 }
 type ImageListResp struct {
-	List  []ImageResp
-	Count int `json:"count"`
+	List  []ImageResp `json:"list"`
+	Count int         `json:"count"`
 }

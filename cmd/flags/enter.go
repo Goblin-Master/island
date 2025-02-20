@@ -35,6 +35,7 @@ func migrateTables() {
 	err := global.DB.AutoMigrate(
 		&model.User{},
 		&model.Image{},
+		&model.Island{},
 	)
 	if err != nil {
 		fmt.Println("数据库迁移失败！")

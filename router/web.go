@@ -47,4 +47,8 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	routeManager.RegisterLoginRoutes(func(rg *gin.RouterGroup) {
 		rg.POST("/qq", api.QQLogin)
 	})
+
+	routeManager.RegisterIslandRoutes(func(rg *gin.RouterGroup) {
+		rg.GET("/", api.GetIsland)
+	})
 }
