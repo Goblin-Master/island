@@ -64,7 +64,8 @@ var (
 	ISLAND_UPDATE_ERROR = MsgCode{40003, "岛屿修改失败"}
 	ISLAND_DELETE_ERROR = MsgCode{40004, "岛屿删除失败"}
 	ISLAND_GET_ERROR    = MsgCode{40005, "岛屿获取失败"}
-	ISLAND_EXIST        = MsgCode{40001, "岛屿名字已经存在"}
+	ISLAND_EXIST        = MsgCode{40006, "岛屿名字已经存在"}
+	ISLAND_NOT_UPDATE   = MsgCode{40007, "权限不足,无法修改别人的岛屿"}
 	/*
 	 USER_ACCOUNT_DISABLE(20005, "账号不可用"),
 	 USER_ACCOUNT_LOCKED(20006, "账号被锁定"),

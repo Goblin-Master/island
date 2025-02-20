@@ -95,8 +95,8 @@ func (l *IslandLogic) ModifyIsland(ctx context.Context, req types.IslandReq) (re
 	userid := int64(793478004095)
 	r := repo.NewIslandRepo(global.DB)
 	if !r.IdentifyIslandById(req.ID, userid) {
-		zlog.CtxInfof(ctx, "岛屿不存在:%v", err)
-		return types.IslandResp{}, response.ErrResp(err, response.ISLAND_NOT_EXIST)
+		zlog.CtxInfof(ctx, "修改岛屿权限不足:%v", err)
+		return types.IslandResp{}, response.ErrResp(err, response.ISLAND_NOT_UPDATE)
 	}
 	if r.IdentifyIslandName(req.Name) {
 		zlog.CtxInfof(ctx, "岛屿名字重复:%v", err)
