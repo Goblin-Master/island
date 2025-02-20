@@ -1,7 +1,7 @@
 package types
 
 type IslandReq struct {
-	ID     int64   `json:"id"`
+	ID     int64   `json:"id"` // 岛屿id
 	Name   string  `json:"name"`
 	Path   string  `json:"path"`
 	Width  float64 `json:"width"`
@@ -10,10 +10,21 @@ type IslandReq struct {
 	YPoint float64 `json:"yPoint"`
 }
 type IslandResp struct {
-	ID   int64  `json:"id"`
-	Name string `json:"name"`
+	UserID int64  `json:"userid"`
+	ID     int64  `json:"id"`
+	Name   string `json:"name"`
+}
+type ListReq struct {
+	ID     int64   `json:"id"`
+	Name   string  `json:"name"`
+	Width  float64 `json:"width"`
+	Height float64 `json:"height"`
+	XPoint float64 `json:"xPoint"`
+	YPoint float64 `json:"yPoint"`
+	Path   string  `json:"path"`
+	UserID int64   `json:"userid"`
 }
 type IslandListResp struct {
-	List  []IslandReq `json:"list"`
-	Count int         `json:"count"`
+	List  []ListReq `json:"list"`
+	Count int       `json:"count"`
 }

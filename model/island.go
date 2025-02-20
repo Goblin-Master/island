@@ -6,7 +6,7 @@ import (
 )
 
 type Island struct {
-	ID        int64 `gorm:"primaryKey;column:id;type:bigint"`
+	ID        int64 `gorm:"primaryKey;column:id;type:bigint;uniqueIndex:idx_name"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
@@ -16,6 +16,7 @@ type Island struct {
 	Height    float64        `gorm:"column:height;type:float;not null;comment:'高度'"`
 	XPoint    float64        `gorm:"column:xPoint;type:float;not null;comment:'x坐标'"`
 	YPoint    float64        `gorm:"column:yPoint;type:float;not null;comment:'y坐标'"`
+	UserID    int64          `gorm:"column:userid;type:bigint;not null;comment:'用户id';uniqueIndex:idx_name"`
 }
 
 func (i *Island) TableName() string {

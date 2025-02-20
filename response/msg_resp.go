@@ -57,6 +57,14 @@ var (
 	IMAGE_NOT_SUPPORT  = MsgCode{30004, "不支持该图片格式"}
 	IMAGE_OVER_SIZE    = MsgCode{30005, "图片大小超出限制"}
 	IMAGE_NOT_OPEN     = MsgCode{30006, "图片打开失败"}
+
+	/* 岛屿错误 40000 ~ 49999 */
+	ISLAND_NOT_EXIST    = MsgCode{40001, "岛屿不存在"}
+	ISLAND_CREATE_ERROR = MsgCode{40002, "岛屿创建失败"}
+	ISLAND_UPDATE_ERROR = MsgCode{40003, "岛屿修改失败"}
+	ISLAND_DELETE_ERROR = MsgCode{40004, "岛屿删除失败"}
+	ISLAND_GET_ERROR    = MsgCode{40005, "岛屿获取失败"}
+	ISLAND_EXIST        = MsgCode{40001, "岛屿名字已经存在"}
 	/*
 	 USER_ACCOUNT_DISABLE(20005, "账号不可用"),
 	 USER_ACCOUNT_LOCKED(20006, "账号被锁定"),
