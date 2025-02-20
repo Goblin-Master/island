@@ -13,6 +13,7 @@ import (
 	"tgwp/types"
 	"tgwp/utils/fileUtils"
 	"tgwp/utils/hashUtils"
+	"tgwp/utils/snowflake"
 )
 
 // 上传的图片保存在uploads/images
@@ -59,7 +60,16 @@ func UploadImages(c *gin.Context) {
 	}
 	//入库
 	filePath := fmt.Sprintf("%s/%s.%s", global.IMAGE_PATH, hash, suffix)
+	//雪花id的生成格式
+	node, err := snowflake.NewNode(global.DEFAULT_NODE_ID)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "NewNode err: %v", err)
+		response.NewResponse(c).Error(response.COMMON_FAIL)
+	}
+	//一般是生成12位的int64id，也可以生成string的，看snowflakes包
+	id := snowflake.GetInt12Id(node)
 	m = model.Image{
+		ID:       id,
 		Filename: filename,
 		Hash:     hash,
 		Path:     filePath,
@@ -77,7 +87,10 @@ func UploadImages(c *gin.Context) {
 		response.NewResponse(c).Error(response.IMAGE_UPLOAD_ERROR)
 		return
 	}
-	response.NewResponse(c).Success(m.WebPath())
+	response.NewResponse(c).Success(gin.H{
+		"id":      id,
+		"wedPath": m.WebPath(),
+	})
 }
 func DeleteImages(c *gin.Context) {
 	ctx := zlog.GetCtxFromGin(c)

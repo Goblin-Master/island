@@ -8,6 +8,7 @@ import (
 )
 
 // CommonModel 每张表都有的四个东西，最好不要用 gorm.model（虽然他们一模一样）
+// 不用就自己复制这四个参数，id就自己定义，用了就id会自动生成
 type CommonModel struct {
 	ID        int64 `gorm:"primaryKey;column:id;type:bigint"`
 	CreatedAt time.Time
