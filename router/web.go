@@ -54,4 +54,5 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.PUT("/", api.ModifyIsland)    //修改岛屿
 		rg.DELETE("/", api.DeleteIsland) //删除岛屿
 	})
+
 }
