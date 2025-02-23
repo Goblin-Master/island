@@ -55,4 +55,8 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.DELETE("/", api.DeleteIsland) //删除岛屿
 	})
 
+	routeManager.RegisterAiRoutes(func(rg *gin.RouterGroup) {
+
+	})
+
 }
