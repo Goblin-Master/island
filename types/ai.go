@@ -1,7 +1,7 @@
 package types
 
 type AiReq struct {
-	Content string `json:"content"`
+	Content string `form:"content" json:"content"`
 }
 type AiAnalysisResp struct {
 	Abstract string `json:"abstract"`

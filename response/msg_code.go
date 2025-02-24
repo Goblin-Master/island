@@ -1,6 +1,7 @@
 package response
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
 )
@@ -79,4 +80,15 @@ func (r *JsonMsgResponse) error(code int, message string) {
 	res.Message = message
 	res.Data = nilStruct{}
 	r.Ctx.JSON(code200, res)
+}
+
+func SSESuccess(data any, c *gin.Context) {
+	byteData, _ := json.Marshal(gin.H{"code": SUCCESS_CODE, "data": data, "msg": "成功"})
+	c.SSEvent("", string(byteData))
+	c.Writer.Flush()
+}
+func SSEFail(msg string, c *gin.Context) {
+	byteData, _ := json.Marshal(gin.H{"code": COMMON_FAIL.Code, "data": map[string]any{}, "msg": msg})
+	c.SSEvent("", string(byteData))
+	c.Writer.Flush()
 }
