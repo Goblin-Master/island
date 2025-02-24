@@ -56,7 +56,7 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	})
 
 	routeManager.RegisterAiRoutes(func(rg *gin.RouterGroup) {
-
+		rg.POST("/analysis", api.AiGenerateAbstract)
 	})
 
 }
