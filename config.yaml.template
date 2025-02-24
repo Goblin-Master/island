@@ -28,3 +28,7 @@ qq:
   appID: 0
   appKey: 0
   redirectUri: http://127.0.0.*/1:8080/qq/callback
+
+ai:
+  model: gpt-3.5-turbo
+  apiKey:""
