@@ -9,10 +9,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"tgwp/global"
 	"tgwp/log/zlog"
-	"tgwp/utils/cacheUtils"
 	"time"
 )
 
@@ -146,15 +144,8 @@ type StreamData struct {
 	SystemFingerprint string   `json:"system_fingerprint"`
 }
 
-func ChatStream(ctx context.Context, content string) (msgChan chan string, err error) {
+func ChatStream(ctx context.Context, content string, history string) (msgChan chan string, err error) {
 	msgChan = make(chan string)
-	// TODO: 获取用户id
-	userid := int64(793478004095)
-	history, err := cacheUtils.GetContent(ctx, strconv.FormatInt(userid, 10))
-	if err != nil {
-		zlog.CtxErrorf(ctx, "获取历史记录失败 %s", err)
-		return
-	}
 	r := ChatRequest{
 		Messages: []Message{
 			{
@@ -208,7 +199,5 @@ func ChatStream(ctx context.Context, content string) (msgChan chan string, err e
 			}
 		}
 	}()
-	// 保存历史记录
-	cacheUtils.SaveContent(ctx, strconv.FormatInt(userid, 10), history, fmt.Sprintf("user:%s,assistant:%s", content, reply))
 	return
 }
