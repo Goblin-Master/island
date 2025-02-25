@@ -32,6 +32,7 @@ func GenToken(data TokenData) (string, error) {
 		jwt.RegisteredClaims{
 			NotBefore: jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(data.Time)), // 过期时间
+			Issuer:    "island",
 		},
 	}
 	// 使用指定的签名方法创建签名对象
