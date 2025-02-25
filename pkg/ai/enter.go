@@ -9,8 +9,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"tgwp/global"
 	"tgwp/log/zlog"
+	"tgwp/utils/cacheUtils"
 	"time"
 )
 
@@ -146,6 +148,13 @@ type StreamData struct {
 
 func ChatStream(ctx context.Context, content string) (msgChan chan string, err error) {
 	msgChan = make(chan string)
+	// TODO: 获取用户id
+	userid := int64(793478004095)
+	history, err := cacheUtils.GetContent(ctx, strconv.FormatInt(userid, 10))
+	if err != nil {
+		zlog.CtxErrorf(ctx, "获取历史记录失败 %s", err)
+		return
+	}
 	r := ChatRequest{
 		Messages: []Message{
 			{
@@ -155,6 +164,10 @@ func ChatStream(ctx context.Context, content string) (msgChan chan string, err e
 			{
 				Role:    "user",
 				Content: content,
+			},
+			{
+				Role:    "assistant",
+				Content: history,
 			},
 		},
 		Model:  global.Config.AI.Model,
@@ -167,6 +180,7 @@ func ChatStream(ctx context.Context, content string) (msgChan chan string, err e
 	scanner := bufio.NewScanner(res.Body)
 	// 设置分割函数,按行分割
 	scanner.Split(bufio.ScanLines)
+	var reply string
 	go func() {
 		defer close(msgChan) // 确保通道在协程结束时关闭
 		defer func() {
@@ -190,8 +204,11 @@ func ChatStream(ctx context.Context, content string) (msgChan chan string, err e
 			}
 			if len(item.Choices) > 0 {
 				msgChan <- item.Choices[0].Delta.Content
+				reply += item.Choices[0].Delta.Content
 			}
 		}
 	}()
+	// 保存历史记录
+	cacheUtils.SaveContent(ctx, strconv.FormatInt(userid, 10), history, content+reply)
 	return
 }
