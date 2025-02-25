@@ -209,6 +209,6 @@ func ChatStream(ctx context.Context, content string) (msgChan chan string, err e
 		}
 	}()
 	// 保存历史记录
-	cacheUtils.SaveContent(ctx, strconv.FormatInt(userid, 10), history, content+reply)
+	cacheUtils.SaveContent(ctx, strconv.FormatInt(userid, 10), history, fmt.Sprintf("user:%s,assistant:%s", content, reply))
 	return
 }
