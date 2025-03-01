@@ -3,7 +3,9 @@ package logic
 import (
 	"context"
 	"tgwp/log/zlog"
+	"tgwp/model"
 	"tgwp/repo"
+	"tgwp/repo/list"
 	"tgwp/response"
 	"tgwp/types"
 	"tgwp/utils"
@@ -23,6 +25,39 @@ func (l *ArticleLogic) ArticleCreate(ctx context.Context, req types.ArticleCreat
 	if err != nil {
 		zlog.CtxInfof(ctx, "创建文章失败:%v", err)
 		return types.ArticleCreateResp{}, response.ErrResp(err, response.ARTICLE_CREATE_ERROR)
+	}
+	return
+}
+func (l *ArticleLogic) ArticleList(ctx context.Context, req list.PageInfo) (resp types.ArticleList, err error) {
+	defer utils.RecordTime(time.Now())()
+	_list, count, err := list.ListQuery(model.Article{}, list.Options{
+		PageInfo: req,
+		Preloads: []string{"User"},
+		Order:    "created_at desc",
+		Likes:    []string{"title"},
+	})
+	if err != nil {
+		zlog.CtxInfof(ctx, "获取文章列表失败:%v", err)
+		return
+	}
+	var articleList = make([]types.Article, 0)
+	for _, v := range _list {
+		articleList = append(articleList, types.Article{
+			CreatedAt: v.CreatedAt,
+			DiggCount: v.DiggCount,
+			Content:   v.Content,
+			ID:        v.ID,
+			Title:     v.Title,
+			Cover:     v.Cover,
+			Abstract:  v.Abstract,
+			Avatar:    v.User.Avatar,
+			Username:  v.User.Username,
+			UserID:    v.UserID,
+		})
+	}
+	resp = types.ArticleList{
+		Count: count,
+		List:  articleList,
 	}
 	return
 }

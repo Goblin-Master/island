@@ -1,5 +1,7 @@
 package types
 
+import "time"
+
 type ArticleCreateReq struct {
 	UserID   int64  `json:"userid"`
 	Abstract string `json:"abstract"`
@@ -9,4 +11,22 @@ type ArticleCreateReq struct {
 }
 type ArticleCreateResp struct {
 	ID int64 `json:"id"` // 文章id
+}
+
+type Article struct {
+	CreatedAt time.Time `json:"created_at"`
+	UserID    int64     `json:"userid"`
+	Abstract  string    `json:"abstract"`
+	Content   string    `json:"content" `
+	Title     string    `json:"title" `
+	Cover     string    `json:"cover"`
+	Username  string    `json:"username"`
+	Avatar    string    `json:"avatar"`
+	DiggCount int64     `json:"digg_count"`
+	ID        int64     `json:"id"`
+}
+
+type ArticleList struct {
+	List  []Article `json:"list"`
+	Count int       `json:"count"`
 }

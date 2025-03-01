@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"tgwp/log/zlog"
 	"tgwp/logic"
+	"tgwp/repo/list"
 	"tgwp/response"
 	"tgwp/types"
 )
@@ -17,5 +18,17 @@ func ArticleCreate(c *gin.Context) {
 	}
 	zlog.CtxInfof(ctx, "CreateArticle request: %v", req)
 	resp, err := logic.NewArticleLogic().ArticleCreate(ctx, req)
+	response.Response(c, resp, err)
+}
+
+func ArticleList(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	//BindReq里面用泛型进行了处理绑定
+	req, err := types.BindReq[list.PageInfo](c)
+	if err != nil {
+		return
+	}
+	zlog.CtxInfof(ctx, "ArticleList request: %v", req)
+	resp, err := logic.NewArticleLogic().ArticleList(ctx, req)
 	response.Response(c, resp, err)
 }

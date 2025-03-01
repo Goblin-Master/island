@@ -66,5 +66,6 @@ func registerRoutes(routeManager *manager.RouteManager) {
 
 	routeManager.RegisterArticleRoutes(func(rg *gin.RouterGroup) {
 		rg.POST("/", api.ArticleCreate)
+		rg.GET("/", api.ArticleList)
 	})
 }
