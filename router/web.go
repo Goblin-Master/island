@@ -63,4 +63,8 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	routeManager.RegisterQuestionRoutes(func(rg *gin.RouterGroup) {
 		rg.POST("/run-code", api.RunCode)
 	})
+
+	routeManager.RegisterArticleRoutes(func(rg *gin.RouterGroup) {
+		rg.POST("/", api.ArticleCreate)
+	})
 }

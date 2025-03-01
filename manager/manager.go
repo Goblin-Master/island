@@ -21,6 +21,7 @@ type RouteManager struct {
 	IslandRoutes   *gin.RouterGroup //岛屿相关的路由组
 	AiRoutes       *gin.RouterGroup //ai相关的路由组
 	QuestionRoutes *gin.RouterGroup //刷题功能相关的路由组
+	ArticleRouter  *gin.RouterGroup //文章相关的路由组
 }
 
 // NewRouteManager 创建一个新的 RouteManager 实例，包含各业务功能的路由组
@@ -31,6 +32,7 @@ func NewRouteManager(router *gin.Engine) *RouteManager {
 		IslandRoutes:   router.Group("/api/island"),   //岛屿相关的路由组
 		AiRoutes:       router.Group("/api/ai"),       //ai相关的路由组
 		QuestionRoutes: router.Group("/api/question"), //刷题功能相关的路由组
+		ArticleRouter:  router.Group("/api/article"),  //文章相关的路由组
 	}
 }
 
@@ -59,6 +61,11 @@ func (rm *RouteManager) RegisterQuestionRoutes(handler PathHandler) {
 	handler(rm.QuestionRoutes)
 }
 
+// RegisterArticleRoutes 注册文章相关的路由处理函数
+func (rm *RouteManager) RegisterArticleRoutes(handler PathHandler) {
+	handler(rm.ArticleRouter)
+}
+
 // RegisterMiddleware 根据组名为对应的路由组注册中间件
 // group 参数为 "login"、"profile"、"team"或"Common"，分别对应不同的路由组
 func (rm *RouteManager) RegisterMiddleware(group string, middleware Middleware) {
@@ -71,6 +78,10 @@ func (rm *RouteManager) RegisterMiddleware(group string, middleware Middleware) 
 		rm.IslandRoutes.Use(middleware())
 	case "ai":
 		rm.AiRoutes.Use(middleware())
+	case "article":
+		rm.ArticleRouter.Use(middleware())
+	case "question":
+		rm.QuestionRoutes.Use(middleware())
 	}
 }
 
