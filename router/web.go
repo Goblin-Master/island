@@ -16,7 +16,11 @@ func RunServer() {
 		zlog.Errorf("Listen error: %v", err)
 		panic(err.Error())
 	}
-	r.Run(fmt.Sprintf("%s:%d", configs.Conf.App.Host, configs.Conf.App.Port)) // 启动 Gin 服务器
+	err = r.Run(fmt.Sprintf("%s:%d", configs.Conf.App.Host, configs.Conf.App.Port)) // 启动 Gin 服务器
+	if err != nil {
+		zlog.Errorf("Run error: %v", err)
+		panic(err.Error())
+	}
 }
 
 // listen 配置 Gin 服务器
@@ -67,5 +71,6 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	routeManager.RegisterArticleRoutes(func(rg *gin.RouterGroup) {
 		rg.POST("/", api.ArticleCreate)
 		rg.GET("/", api.ArticleList)
+		rg.DELETE("/", api.ArticleDelete)
 	})
 }

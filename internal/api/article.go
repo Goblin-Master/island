@@ -32,3 +32,16 @@ func ArticleList(c *gin.Context) {
 	resp, err := logic.NewArticleLogic().ArticleList(ctx, req)
 	response.Response(c, resp, err)
 }
+
+func ArticleDelete(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	var req list.RemoveReq
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.NewResponse(c).Error(response.PARAM_NOT_VALID)
+		return
+	}
+	zlog.CtxInfof(ctx, "ArticleDelete request: %v", req)
+	resp, err := logic.NewArticleLogic().ArticleDelete(ctx, req)
+	response.Response(c, resp, err)
+}
