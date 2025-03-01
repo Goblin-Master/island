@@ -60,4 +60,7 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.GET("/chat", api.AiChatStream)
 	})
 
+	routeManager.RegisterQuestionRoutes(func(rg *gin.RouterGroup) {
+		rg.POST("/run-code", api.RunCode)
+	})
 }

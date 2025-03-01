@@ -16,19 +16,21 @@ type Middleware func() gin.HandlerFunc
 
 // RouteManager 管理不同的路由组，按业务功能分组
 type RouteManager struct {
-	LoginRoutes  *gin.RouterGroup // 登录相关的路由组
-	CommonRoutes *gin.RouterGroup //通用功能相关的路由组
-	IslandRoutes *gin.RouterGroup //岛屿相关的路由组
-	AiRoutes     *gin.RouterGroup //ai相关的路由组
+	LoginRoutes    *gin.RouterGroup // 登录相关的路由组
+	CommonRoutes   *gin.RouterGroup //通用功能相关的路由组
+	IslandRoutes   *gin.RouterGroup //岛屿相关的路由组
+	AiRoutes       *gin.RouterGroup //ai相关的路由组
+	QuestionRoutes *gin.RouterGroup //刷题功能相关的路由组
 }
 
 // NewRouteManager 创建一个新的 RouteManager 实例，包含各业务功能的路由组
 func NewRouteManager(router *gin.Engine) *RouteManager {
 	return &RouteManager{
-		LoginRoutes:  router.Group("/api/login"),  // 初始化登录路由组
-		CommonRoutes: router.Group("/api/common"), //通用功能相关的路由组
-		IslandRoutes: router.Group("/api/island"), //岛屿相关的路由组
-		AiRoutes:     router.Group("/api/ai"),     //ai相关的路由组
+		LoginRoutes:    router.Group("/api/login"),    // 初始化登录路由组
+		CommonRoutes:   router.Group("/api/common"),   //通用功能相关的路由组
+		IslandRoutes:   router.Group("/api/island"),   //岛屿相关的路由组
+		AiRoutes:       router.Group("/api/ai"),       //ai相关的路由组
+		QuestionRoutes: router.Group("/api/question"), //刷题功能相关的路由组
 	}
 }
 
@@ -50,6 +52,11 @@ func (rm *RouteManager) RegisterIslandRoutes(handler PathHandler) {
 // RegisterAiRoutes 注册ai相关的路由处理函数
 func (rm *RouteManager) RegisterAiRoutes(handler PathHandler) {
 	handler(rm.AiRoutes)
+}
+
+// RegisterQuestionRoutes 注册刷题功能相关的路由处理函数
+func (rm *RouteManager) RegisterQuestionRoutes(handler PathHandler) {
+	handler(rm.QuestionRoutes)
 }
 
 // RegisterMiddleware 根据组名为对应的路由组注册中间件
