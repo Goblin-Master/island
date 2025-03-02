@@ -62,7 +62,7 @@ func (l *ArticleLogic) ArticleList(ctx context.Context, req list.PageInfo) (resp
 	}
 	return
 }
-func (r *ArticleLogic) ArticleDelete(ctx context.Context, req list.RemoveReq) (resp string, err error) {
+func (l *ArticleLogic) ArticleDelete(ctx context.Context, req list.RemoveReq) (resp string, err error) {
 	defer utils.RecordTime(time.Now())()
 	db := repo.NewArticleRepo(global.DB)
 	articleList, err := db.GetArticleByIds(req)
@@ -71,5 +71,12 @@ func (r *ArticleLogic) ArticleDelete(ctx context.Context, req list.RemoveReq) (r
 		return
 	}
 	resp, err = db.ArticleDelete(articleList)
+	return
+}
+
+func (l *ArticleLogic) ArticleDigg(ctx context.Context, req types.ArticleDiggReq) (resp string, err error) {
+	defer utils.RecordTime(time.Now())()
+	db := repo.NewArticleRepo(global.DB)
+	resp, err = db.ArticleDigg(ctx, req)
 	return
 }

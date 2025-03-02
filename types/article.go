@@ -30,3 +30,8 @@ type ArticleList struct {
 	List  []Article `json:"list"`
 	Count int       `json:"count"`
 }
+
+type ArticleDiggReq struct {
+	UserID    int64 `form:"userid"`
+	ArticleID int64 `form:"article_id"`
+}

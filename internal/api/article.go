@@ -45,3 +45,14 @@ func ArticleDelete(c *gin.Context) {
 	resp, err := logic.NewArticleLogic().ArticleDelete(ctx, req)
 	response.Response(c, resp, err)
 }
+
+func ArticleDigg(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	req, err := types.BindReq[types.ArticleDiggReq](c)
+	if err != nil {
+		return
+	}
+	zlog.CtxInfof(ctx, "ArticleDigg request: %v", req)
+	resp, err := logic.NewArticleLogic().ArticleDigg(ctx, req)
+	response.Response(c, resp, err)
+}

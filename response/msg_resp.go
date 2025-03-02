@@ -74,6 +74,7 @@ var (
 	ARTICLE_UPDATE_ERROR = MsgCode{50003, "文章修改失败"}
 	ARTICLE_DELETE_ERROR = MsgCode{50004, "文章删除失败"}
 	ARTICLE_GET_ERROR    = MsgCode{50005, "文章获取失败"}
+	ARTICLE_DIGG_ERROR   = MsgCode{50006, "文章点赞失败"}
 	/*
 	 USER_ACCOUNT_DISABLE(20005, "账号不可用"),
 	 USER_ACCOUNT_LOCKED(20006, "账号被锁定"),

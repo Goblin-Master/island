@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"gorm.io/gorm"
 	"tgwp/global"
@@ -48,4 +49,30 @@ func (r *ArticleRepo) ArticleDelete(req []model.Article) (resp string, err error
 	failCount := int64(len(req)) - successCount
 	resp = fmt.Sprintf("操作成功，成功删除了%d篇文章，失败删除了%d篇文章", successCount, failCount)
 	return
+}
+func (r *ArticleRepo) ArticleDigg(ctx context.Context, req types.ArticleDiggReq) (resp string, err error) {
+	var digg model.Digg
+	err = r.DB.Where("article_id = ? and user_id = ?", req.ArticleID, req.UserID).Take(&digg).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			digg = model.Digg{
+				ArticleId: req.ArticleID,
+				UserId:    req.UserID,
+			}
+			err = r.DB.Create(&digg).Error
+			if err != nil {
+				zlog.CtxErrorf(ctx, "点赞失败:%v", err)
+				return "", response.ErrResp(err, response.ARTICLE_DIGG_ERROR)
+			}
+			return "点赞成功", nil
+		}
+		zlog.CtxErrorf(ctx, "点赞时数据库出现错误:%v", err)
+		return "", response.ErrResp(err, response.ARTICLE_DIGG_ERROR)
+	}
+	// 已经点赞过了
+	if err = r.DB.Delete(&digg).Error; err != nil {
+		zlog.CtxErrorf(ctx, "取消点赞失败:%v", err)
+		return "", response.ErrResp(err, response.ARTICLE_DIGG_ERROR)
+	}
+	return "取消点赞成功", nil
 }
