@@ -1,0 +1,19 @@
+name: Docker Image CI
+
+on: [push]
+
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: |
+          echo "${{ secrets.CONFIG_YAML }}" >> config.yaml
+          docker login --username=aliyun8502304702 crpi-ihkn2rvtrqwwopyn.cn-hongkong.personal.cr.aliyuncs.com -p ${{ secrets.DOCKER_HUB_PASSWORD }}
+          docker buildx create --use
+          docker buildx build .   --push --tag island:backend
