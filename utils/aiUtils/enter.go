@@ -1,4 +1,4 @@
-package cacheUtils
+package aiUtils
 
 import (
 	"context"

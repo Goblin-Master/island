@@ -9,7 +9,7 @@ import (
 	"tgwp/pkg/ai"
 	"tgwp/response"
 	"tgwp/types"
-	"tgwp/utils/cacheUtils"
+	"tgwp/utils/aiUtils"
 )
 
 // AiGenerateAbstract
@@ -39,7 +39,7 @@ func AiChatStream(c *gin.Context) {
 	}
 	zlog.CtxInfof(ctx, " AiChatStream request: %s", req)
 	userid := int64(793478004095)
-	history, err := cacheUtils.GetContent(ctx, strconv.FormatInt(userid, 10))
+	history, err := aiUtils.GetContent(ctx, strconv.FormatInt(userid, 10))
 	if err != nil {
 		zlog.CtxErrorf(ctx, "获取历史记录失败 %s", err)
 		return
@@ -55,5 +55,5 @@ func AiChatStream(c *gin.Context) {
 		response.SSESuccess(msg, c)
 	}
 	// 保存历史记录
-	cacheUtils.SaveContent(ctx, strconv.FormatInt(userid, 10), history, fmt.Sprintf("user:%s,assistant:%s ", req.Content, reply))
+	aiUtils.SaveContent(ctx, strconv.FormatInt(userid, 10), history, fmt.Sprintf("user:%s,assistant:%s ", req.Content, reply))
 }
