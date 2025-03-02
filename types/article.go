@@ -22,7 +22,7 @@ type Article struct {
 	Cover     string    `json:"cover"`
 	Username  string    `json:"username"`
 	Avatar    string    `json:"avatar"`
-	DiggCount int64     `json:"digg_count"`
+	DiggCount int       `json:"digg_count"`
 	ID        int64     `json:"id"`
 }
 

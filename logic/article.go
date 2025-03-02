@@ -10,6 +10,7 @@ import (
 	"tgwp/response"
 	"tgwp/types"
 	"tgwp/utils"
+	"tgwp/utils/articleUtils"
 	"time"
 )
 
@@ -45,7 +46,8 @@ func (l *ArticleLogic) ArticleList(ctx context.Context, req list.PageInfo) (resp
 	for _, v := range _list {
 		articleList = append(articleList, types.Article{
 			CreatedAt: v.CreatedAt,
-			DiggCount: v.DiggCount,
+			//从缓存同步数据
+			DiggCount: v.DiggCount + articleUtils.GetCacheDigg(ctx, v.ID),
 			Content:   v.Content,
 			ID:        v.ID,
 			Title:     v.Title,

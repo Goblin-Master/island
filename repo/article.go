@@ -11,6 +11,7 @@ import (
 	"tgwp/repo/list"
 	"tgwp/response"
 	"tgwp/types"
+	"tgwp/utils/articleUtils"
 )
 
 type ArticleRepo struct {
@@ -64,6 +65,8 @@ func (r *ArticleRepo) ArticleDigg(ctx context.Context, req types.ArticleDiggReq)
 				zlog.CtxErrorf(ctx, "点赞失败:%v", err)
 				return "", response.ErrResp(err, response.ARTICLE_DIGG_ERROR)
 			}
+			// 点赞成功，设置缓存
+			articleUtils.SetCacheDigg(ctx, req.ArticleID, 1)
 			return "点赞成功", nil
 		}
 		zlog.CtxErrorf(ctx, "点赞时数据库出现错误:%v", err)
@@ -74,5 +77,7 @@ func (r *ArticleRepo) ArticleDigg(ctx context.Context, req types.ArticleDiggReq)
 		zlog.CtxErrorf(ctx, "取消点赞失败:%v", err)
 		return "", response.ErrResp(err, response.ARTICLE_DIGG_ERROR)
 	}
+	// 取消点赞成功，设置缓存
+	articleUtils.SetCacheDigg(ctx, req.ArticleID, -1)
 	return "取消点赞成功", nil
 }
