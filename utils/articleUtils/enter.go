@@ -12,7 +12,8 @@ import (
 type articleCacheType string
 
 const (
-	articleCacheDigg articleCacheType = "article_digg_key"
+	articleCacheDigg    articleCacheType = "article_digg_key"
+	articleCacheCollect articleCacheType = "article_collect_key"
 )
 
 func set(ctx context.Context, key articleCacheType, articleID int64, n int) {
@@ -31,6 +32,9 @@ func set(ctx context.Context, key articleCacheType, articleID int64, n int) {
 func SetCacheDigg(ctx context.Context, articleID int64, n int) {
 	set(ctx, articleCacheDigg, articleID, n)
 }
+func SetCacheCollect(ctx context.Context, articleID int64, n int) {
+	set(ctx, articleCacheCollect, articleID, n)
+}
 func get(ctx context.Context, key articleCacheType, articleID int64) int {
 	num, err := global.Rdb.HGet(ctx, string(key), strconv.Itoa(int(articleID))).Int()
 	if err != nil && !strings.Contains(err.Error(), "redis: nil") {
@@ -41,6 +45,9 @@ func get(ctx context.Context, key articleCacheType, articleID int64) int {
 }
 func GetCacheDigg(ctx context.Context, articleID int64) int {
 	return get(ctx, articleCacheDigg, articleID)
+}
+func GetCacheCollect(ctx context.Context, articleID int64) int {
+	return get(ctx, articleCacheCollect, articleID)
 }
 func getAll(ctx context.Context, t articleCacheType) (mps map[int64]int) {
 	res, err := global.Rdb.HGetAll(ctx, string(t)).Result()
@@ -67,8 +74,11 @@ func getAll(ctx context.Context, t articleCacheType) (mps map[int64]int) {
 func GetCacheDiggList(ctx context.Context) (mps map[int64]int) {
 	return getAll(ctx, articleCacheDigg)
 }
+func GetCacheCollectList(ctx context.Context) (mps map[int64]int) {
+	return getAll(ctx, articleCacheCollect)
+}
 func ClearCache(ctx context.Context) {
-	err := global.Rdb.Del(ctx, string(articleCacheDigg)).Err()
+	err := global.Rdb.Del(ctx, string(articleCacheDigg), string(articleCacheCollect)).Err()
 	if err != nil {
 		zlog.CtxErrorf(ctx, "redis文章处理缓存错误: %s\n", err)
 	}

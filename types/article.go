@@ -14,16 +14,17 @@ type ArticleCreateResp struct {
 }
 
 type Article struct {
-	CreatedAt time.Time `json:"created_at"`
-	UserID    int64     `json:"userid"`
-	Abstract  string    `json:"abstract"`
-	Content   string    `json:"content" `
-	Title     string    `json:"title" `
-	Cover     string    `json:"cover"`
-	Username  string    `json:"username"`
-	Avatar    string    `json:"avatar"`
-	DiggCount int       `json:"digg_count"`
-	ID        int64     `json:"id"`
+	CreatedAt    time.Time `json:"created_at"`
+	UserID       int64     `json:"userid"`
+	Abstract     string    `json:"abstract"`
+	Content      string    `json:"content" `
+	Title        string    `json:"title" `
+	Cover        string    `json:"cover"`
+	Username     string    `json:"username"`
+	Avatar       string    `json:"avatar"`
+	DiggCount    int       `json:"digg_count"`
+	CollectCount int       `json:"collect_count"`
+	ID           int64     `json:"id"`
 }
 
 type ArticleList struct {

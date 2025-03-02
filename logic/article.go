@@ -47,15 +47,16 @@ func (l *ArticleLogic) ArticleList(ctx context.Context, req list.PageInfo) (resp
 		articleList = append(articleList, types.Article{
 			CreatedAt: v.CreatedAt,
 			//从缓存同步数据
-			DiggCount: v.DiggCount + articleUtils.GetCacheDigg(ctx, v.ID),
-			Content:   v.Content,
-			ID:        v.ID,
-			Title:     v.Title,
-			Cover:     v.Cover,
-			Abstract:  v.Abstract,
-			Avatar:    v.User.Avatar,
-			Username:  v.User.Username,
-			UserID:    v.UserID,
+			DiggCount:    v.DiggCount + articleUtils.GetCacheDigg(ctx, v.ID),
+			CollectCount: v.CollectCount + articleUtils.GetCacheCollect(ctx, v.ID),
+			Content:      v.Content,
+			ID:           v.ID,
+			Title:        v.Title,
+			Cover:        v.Cover,
+			Abstract:     v.Abstract,
+			Avatar:       v.User.Avatar,
+			Username:     v.User.Username,
+			UserID:       v.UserID,
 		})
 	}
 	resp = types.ArticleList{

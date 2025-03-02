@@ -13,15 +13,18 @@ func SyncArticle() {
 	ctx := context.Background()
 	zlog.CtxInfof(ctx, "开始同步文章点赞数")
 	diggMap := articleUtils.GetCacheDiggList(ctx)
+	collectMap := articleUtils.GetCacheCollectList(ctx)
 	var list []model.Article
 	global.DB.Find(&list)
 	for _, t := range list {
 		digg := diggMap[t.ID]
-		if digg == 0 {
+		collect := collectMap[t.ID]
+		if digg == 0 && collect == 0 {
 			continue
 		}
 		err := global.DB.Model(&t).Updates(map[string]any{
-			"digg_count": t.DiggCount + digg,
+			"digg_count":    t.DiggCount + digg,
+			"collect_count": t.CollectCount + collect,
 		}).Error
 		if err != nil {
 			zlog.CtxErrorf(ctx, "更新文章失败 %s", err)
@@ -31,13 +34,16 @@ func SyncArticle() {
 	}
 	// 回填增量
 	_diggMap := articleUtils.GetCacheDiggList(ctx)
+	_collectMap := articleUtils.GetCacheCollectList(ctx)
 	//同步回去
 	for _, t := range list {
 		digg := _diggMap[t.ID] - diggMap[t.ID]
-		if digg == 0 {
+		collect := _collectMap[t.ID] - collectMap[t.ID]
+		if digg == 0 && collect == 0 {
 			continue
 		}
 		articleUtils.SetCacheDigg(ctx, t.ID, digg)
+		articleUtils.SetCacheCollect(ctx, t.ID, collect)
 	}
 	articleUtils.ClearCache(ctx)
 }
