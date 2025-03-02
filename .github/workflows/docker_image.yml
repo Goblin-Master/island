@@ -14,6 +14,6 @@ jobs:
       - name: Build the Docker image
         run: |
           echo "${{ secrets.CONFIG_YAML }}" >> config.yaml
-          docker login --username=aliyun8502304702 crpi-ihkn2rvtrqwwopyn.cn-hongkong.personal.cr.aliyuncs.com -p ${{ secrets.DOCKER_HUB_PASSWORD }}
+          docker login --username=${{ secrets.ALIYUN_REGISTRY_USER }} ${{ secrets.ALIYUN_REGISTRY }} -p ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
           docker buildx create --use
           docker buildx build .   --push --tag island:backend
