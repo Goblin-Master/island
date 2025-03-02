@@ -3,6 +3,7 @@ package initalize
 import (
 	"tgwp/cmd/flags"
 	"tgwp/global"
+	"tgwp/initalize/corn"
 	"tgwp/utils"
 )
 
@@ -15,6 +16,7 @@ func Init() {
 	InitLog(global.Config)
 	InitDataBase(*global.Config)
 	InitRedis(*global.Config)
+	corn.Cron() // 开启定时任务
 	flags.Run() // 会通过特殊手段执行数据库表的迁移
 }
 func InitPath() {
