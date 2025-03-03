@@ -38,6 +38,7 @@ func migrateTables() {
 		&model.Island{},
 		&model.Article{},
 		&model.Digg{},
+		&model.Collect{},
 	)
 	if err != nil {
 		fmt.Println("数据库迁移失败！")

@@ -69,12 +69,13 @@ var (
 	ISLAND_EXIST        = MsgCode{40006, "岛屿名字已经存在"}
 	ISLAND_NOT_UPDATE   = MsgCode{40007, "权限不足,无法修改别人的岛屿"}
 	/* 文章错误 50000 ~ 59999 */
-	Article_NOT_EXIST    = MsgCode{50001, "文章不存在"}
-	ARTICLE_CREATE_ERROR = MsgCode{50002, "文章创建失败"}
-	ARTICLE_UPDATE_ERROR = MsgCode{50003, "文章修改失败"}
-	ARTICLE_DELETE_ERROR = MsgCode{50004, "文章删除失败"}
-	ARTICLE_GET_ERROR    = MsgCode{50005, "文章获取失败"}
-	ARTICLE_DIGG_ERROR   = MsgCode{50006, "文章点赞失败"}
+	Article_NOT_EXIST     = MsgCode{50001, "文章不存在"}
+	ARTICLE_CREATE_ERROR  = MsgCode{50002, "文章创建失败"}
+	ARTICLE_UPDATE_ERROR  = MsgCode{50003, "文章修改失败"}
+	ARTICLE_DELETE_ERROR  = MsgCode{50004, "文章删除失败"}
+	ARTICLE_GET_ERROR     = MsgCode{50005, "文章获取失败"}
+	ARTICLE_DIGG_ERROR    = MsgCode{50006, "文章点赞失败"}
+	ARTICLE_COLLECT_ERROR = MsgCode{50007, "文章收藏失败"}
 	/*
 	 USER_ACCOUNT_DISABLE(20005, "账号不可用"),
 	 USER_ACCOUNT_LOCKED(20006, "账号被锁定"),

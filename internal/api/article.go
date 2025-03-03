@@ -56,3 +56,13 @@ func ArticleDigg(c *gin.Context) {
 	resp, err := logic.NewArticleLogic().ArticleDigg(ctx, req)
 	response.Response(c, resp, err)
 }
+func ArticleCollect(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	req, err := types.BindReq[types.ArticleCollectReq](c)
+	if err != nil {
+		return
+	}
+	zlog.CtxInfof(ctx, "ArticleCollect request: %v", req)
+	resp, err := logic.NewArticleLogic().ArticleCollect(ctx, req)
+	response.Response(c, resp, err)
+}

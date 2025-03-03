@@ -36,3 +36,7 @@ type ArticleDiggReq struct {
 	UserID    int64 `form:"userid"`
 	ArticleID int64 `form:"article_id"`
 }
+type ArticleCollectReq struct {
+	UserID    int64 `form:"userid"`
+	ArticleID int64 `form:"article_id"`
+}
