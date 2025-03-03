@@ -111,3 +111,12 @@ func (r *ArticleRepo) ArticleCollect(ctx context.Context, req types.ArticleColle
 	articleUtils.SetCacheCollect(ctx, req.ArticleID, -1)
 	return "取消收藏成功", nil
 }
+
+func (r *ArticleRepo) CollectList(ctx context.Context, userid int64) (articleIDList []int64, err error) {
+	err = r.DB.Model(&model.Collect{}).Where("user_id = ?", userid).Pluck("article_id", &articleIDList).Error
+	if err != nil {
+		zlog.CtxErrorf(ctx, "获取收藏列表失败:%v", err)
+		return nil, response.ErrResp(err, response.GET_COLLECT_ARTICLE_ERROR)
+	}
+	return
+}
