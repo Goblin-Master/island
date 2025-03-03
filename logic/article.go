@@ -41,7 +41,7 @@ func (l *ArticleLogic) ArticleList(ctx context.Context, req list.PageInfo) (resp
 		PageInfo: req,
 		Preloads: []string{"User"},
 		Order:    "created_at desc",
-		Likes:    []string{"title"},
+		Likes:    []string{"title", "island"},
 	})
 	if err != nil {
 		zlog.CtxInfof(ctx, "获取文章列表失败:%v", err)
@@ -62,6 +62,7 @@ func (l *ArticleLogic) ArticleList(ctx context.Context, req list.PageInfo) (resp
 			Avatar:       v.User.Avatar,
 			Username:     v.User.Username,
 			UserID:       v.UserID,
+			Island:       v.Island,
 		})
 	}
 	resp = types.ArticleList{
@@ -108,7 +109,7 @@ func (l *ArticleLogic) ArticleListByUserID(ctx context.Context, req list.PageInf
 		PageInfo: req,
 		Preloads: []string{"User"},
 		Order:    "created_at desc",
-		Likes:    []string{"title"},
+		Likes:    []string{"title", "island"},
 	})
 	if err != nil {
 		zlog.CtxInfof(ctx, "获取文章列表失败:%v", err)
@@ -129,6 +130,7 @@ func (l *ArticleLogic) ArticleListByUserID(ctx context.Context, req list.PageInf
 			Avatar:       v.User.Avatar,
 			Username:     v.User.Username,
 			UserID:       v.UserID,
+			Island:       v.Island,
 		})
 	}
 	resp = types.ArticleList{
@@ -153,7 +155,7 @@ func (l *ArticleLogic) ArticleCollectList(ctx context.Context, req list.PageInfo
 		PageInfo: req,
 		Preloads: []string{"User"},
 		Order:    "created_at desc",
-		Likes:    []string{"title"},
+		Likes:    []string{"title", "island"},
 		Where:    global.DB.Where("id in ?", collectList),
 	})
 	var articleList = make([]types.Article, 0)
@@ -171,6 +173,7 @@ func (l *ArticleLogic) ArticleCollectList(ctx context.Context, req list.PageInfo
 			Avatar:       v.User.Avatar,
 			Username:     v.User.Username,
 			UserID:       v.UserID,
+			Island:       v.Island,
 		})
 	}
 	resp = types.ArticleList{
@@ -195,7 +198,7 @@ func (l *ArticleLogic) ArticleDiggList(ctx context.Context, req list.PageInfo) (
 		PageInfo: req,
 		Preloads: []string{"User"},
 		Order:    "created_at desc",
-		Likes:    []string{"title"},
+		Likes:    []string{"title", "island"},
 		Where:    global.DB.Where("id in ?", diggList),
 	})
 	var articleList = make([]types.Article, 0)
@@ -213,6 +216,7 @@ func (l *ArticleLogic) ArticleDiggList(ctx context.Context, req list.PageInfo) (
 			Avatar:       v.User.Avatar,
 			Username:     v.User.Username,
 			UserID:       v.UserID,
+			Island:       v.Island,
 		})
 	}
 	resp = types.ArticleList{

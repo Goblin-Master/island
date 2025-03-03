@@ -15,6 +15,7 @@ type ArticleCreateResp struct {
 }
 
 type Article struct {
+	Island       string    `json:"island"`
 	CreatedAt    time.Time `json:"created_at"`
 	UserID       int64     `json:"userid"`
 	Abstract     string    `json:"abstract"`
