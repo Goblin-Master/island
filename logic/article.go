@@ -94,3 +94,41 @@ func (l *ArticleLogic) ArticleCollect(ctx context.Context, req types.ArticleColl
 	resp, err = db.ArticleCollect(ctx, req)
 	return
 }
+func (l *ArticleLogic) ArticleListByUserID(ctx context.Context, req list.PageInfo) (resp types.ArticleList, err error) {
+	defer utils.RecordTime(time.Now())()
+	_list, count, err := list.ListQuery(model.Article{
+		// TODO:获取用户id填进去
+		UserID: int64(793478004095),
+	}, list.Options{
+		PageInfo: req,
+		Preloads: []string{"User"},
+		Order:    "created_at desc",
+		Likes:    []string{"title"},
+	})
+	if err != nil {
+		zlog.CtxInfof(ctx, "获取文章列表失败:%v", err)
+		return
+	}
+	var articleList = make([]types.Article, 0)
+	for _, v := range _list {
+		articleList = append(articleList, types.Article{
+			CreatedAt: v.CreatedAt,
+			//从缓存同步数据
+			DiggCount:    v.DiggCount + articleUtils.GetCacheDigg(ctx, v.ID),
+			CollectCount: v.CollectCount + articleUtils.GetCacheCollect(ctx, v.ID),
+			Content:      v.Content,
+			ID:           v.ID,
+			Title:        v.Title,
+			Cover:        v.Cover,
+			Abstract:     v.Abstract,
+			Avatar:       v.User.Avatar,
+			Username:     v.User.Username,
+			UserID:       v.UserID,
+		})
+	}
+	resp = types.ArticleList{
+		Count: count,
+		List:  articleList,
+	}
+	return
+}

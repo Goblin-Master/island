@@ -66,3 +66,14 @@ func ArticleCollect(c *gin.Context) {
 	resp, err := logic.NewArticleLogic().ArticleCollect(ctx, req)
 	response.Response(c, resp, err)
 }
+func ArticleListByUerID(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	//BindReq里面用泛型进行了处理绑定
+	req, err := types.BindReq[list.PageInfo](c)
+	if err != nil {
+		return
+	}
+	zlog.CtxInfof(ctx, "ArticleList request: %v", req)
+	resp, err := logic.NewArticleLogic().ArticleListByUserID(ctx, req)
+	response.Response(c, resp, err)
+}

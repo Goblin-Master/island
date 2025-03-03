@@ -74,5 +74,6 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.DELETE("/", api.ArticleDelete)
 		rg.GET("/digg", api.ArticleDigg)
 		rg.GET("/collect", api.ArticleCollect)
+		rg.GET("/owner", api.ArticleListByUerID)
 	})
 }
