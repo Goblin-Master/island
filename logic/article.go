@@ -22,6 +22,11 @@ func NewArticleLogic() *ArticleLogic {
 }
 func (l *ArticleLogic) ArticleCreate(ctx context.Context, req types.ArticleCreateReq) (resp types.ArticleCreateResp, err error) {
 	defer utils.RecordTime(time.Now())()
+	// 判断岛屿名称是否存在
+	if !repo.NewIslandRepo(global.DB).IdentifyIslandName(req.Island) {
+		zlog.CtxInfof(ctx, "岛屿不存在")
+		return types.ArticleCreateResp{}, response.ErrResp(err, response.ISLAND_NOT_EXIST)
+	}
 	//TODO: 拿用户id
 	resp, err = repo.NewArticleRepo(global.DB).ArticleCreate(ctx, req)
 	if err != nil {

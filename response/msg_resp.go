@@ -68,6 +68,7 @@ var (
 	ISLAND_GET_ERROR    = MsgCode{40005, "岛屿获取失败"}
 	ISLAND_EXIST        = MsgCode{40006, "岛屿名字已经存在"}
 	ISLAND_NOT_UPDATE   = MsgCode{40007, "权限不足,无法修改别人的岛屿"}
+
 	/* 文章错误 50000 ~ 59999 */
 	Article_NOT_EXIST         = MsgCode{50001, "文章不存在"}
 	ARTICLE_CREATE_ERROR      = MsgCode{50002, "文章创建失败"}

@@ -25,6 +25,8 @@ func NewArticleRepo(db *gorm.DB) *ArticleRepo {
 }
 func (r *ArticleRepo) ArticleCreate(ctx context.Context, req types.ArticleCreateReq) (resp types.ArticleCreateResp, err error) {
 	article := model.Article{
+		Island:   req.Island,
+		Cover:    req.Cover,
 		Abstract: req.Abstract,
 		Content:  req.Content,
 		Title:    req.Title,

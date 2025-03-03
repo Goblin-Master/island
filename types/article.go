@@ -3,6 +3,7 @@ package types
 import "time"
 
 type ArticleCreateReq struct {
+	Island   string `json:"island" binding:"required"`
 	UserID   int64  `json:"userid"`
 	Abstract string `json:"abstract"`
 	Content  string `json:"content" binding:"required"`

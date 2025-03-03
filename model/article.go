@@ -2,6 +2,7 @@ package model
 
 type Article struct {
 	CommonModel
+	Island       string `gorm:"column:island;type:varchar(64);not null;comment:'岛屿'"`
 	Cover        string `gorm:"column:cover;type:varchar(255);not null;comment:'封面'"`
 	Content      string `gorm:"column:content;type:longtext;not null;comment:'内容'"`
 	Abstract     string `gorm:"column:abstract;type:varchar(255);not null;comment:'摘要'"`
