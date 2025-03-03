@@ -85,3 +85,12 @@ func (l *ArticleLogic) ArticleDigg(ctx context.Context, req types.ArticleDiggReq
 	resp, err = db.ArticleDigg(ctx, req)
 	return
 }
+
+func (l *ArticleLogic) ArticleCollect(ctx context.Context, req types.ArticleDiggReq) (resp string, err error) {
+	defer utils.RecordTime(time.Now())()
+	// TODO:获取用户id填进去
+	req.UserID = int64(793478004095)
+	db := repo.NewArticleRepo(global.DB)
+	resp, err = db.ArticleDigg(ctx, req)
+	return
+}
