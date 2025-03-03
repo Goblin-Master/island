@@ -73,7 +73,18 @@ func ArticleListByUerID(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	zlog.CtxInfof(ctx, "ArticleList request: %v", req)
+	zlog.CtxInfof(ctx, "ArticleListByUerID request: %v", req)
 	resp, err := logic.NewArticleLogic().ArticleListByUserID(ctx, req)
+	response.Response(c, resp, err)
+}
+
+func ArticleCollectList(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	req, err := types.BindReq[list.PageInfo](c)
+	if err != nil {
+		return
+	}
+	zlog.CtxInfof(ctx, "ArticleCollectList request: %v", req)
+	resp, err := logic.NewArticleLogic().ArticleCollectList(ctx, req)
 	response.Response(c, resp, err)
 }

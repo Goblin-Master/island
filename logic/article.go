@@ -132,3 +132,7 @@ func (l *ArticleLogic) ArticleListByUserID(ctx context.Context, req list.PageInf
 	}
 	return
 }
+func (l *ArticleLogic) ArticleCollectList(ctx context.Context, req list.PageInfo) (resp types.ArticleList, err error) {
+	defer utils.RecordTime(time.Now())()
+	return
+}

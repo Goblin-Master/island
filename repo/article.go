@@ -57,8 +57,8 @@ func (r *ArticleRepo) ArticleDigg(ctx context.Context, req types.ArticleDiggReq)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			digg = model.Digg{
-				ArticleId: req.ArticleID,
-				UserId:    req.UserID,
+				ArticleID: req.ArticleID,
+				UserID:    req.UserID,
 			}
 			err = r.DB.Create(&digg).Error
 			if err != nil {
@@ -87,8 +87,8 @@ func (r *ArticleRepo) ArticleCollect(ctx context.Context, req types.ArticleColle
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			collect = model.Collect{
-				ArticleId: req.ArticleID,
-				UserId:    req.UserID,
+				ArticleID: req.ArticleID,
+				UserID:    req.UserID,
 			}
 			err = r.DB.Create(&collect).Error
 			if err != nil {
