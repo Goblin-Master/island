@@ -174,3 +174,45 @@ func (l *ArticleLogic) ArticleCollectList(ctx context.Context, req list.PageInfo
 	}
 	return
 }
+func (l *ArticleLogic) ArticleDiggList(ctx context.Context, req list.PageInfo) (resp types.ArticleList, err error) {
+	defer utils.RecordTime(time.Now())()
+	//TODO: 获取用户id填进去
+	//先查用户点赞表，获取所有文章id
+	diggList, err := repo.NewArticleRepo(global.DB).DiggList(ctx, int64(793478004095))
+	if err != nil {
+		zlog.CtxInfof(ctx, "获取文章列表失败:%v", err)
+		return types.ArticleList{}, response.ErrResp(err, response.GET_DIGG_ARTICLE_ERROR)
+	}
+	if len(diggList) == 0 {
+		return types.ArticleList{}, nil
+	}
+	_list, count, err := list.ListQuery(model.Article{}, list.Options{
+		PageInfo: req,
+		Preloads: []string{"User"},
+		Order:    "created_at desc",
+		Likes:    []string{"title"},
+		Where:    global.DB.Where("id in ?", diggList),
+	})
+	var articleList = make([]types.Article, 0)
+	for _, v := range _list {
+		articleList = append(articleList, types.Article{
+			CreatedAt: v.CreatedAt,
+			//从缓存同步数据
+			DiggCount:    v.DiggCount + articleUtils.GetCacheDigg(ctx, v.ID),
+			CollectCount: v.CollectCount + articleUtils.GetCacheCollect(ctx, v.ID),
+			Content:      v.Content,
+			ID:           v.ID,
+			Title:        v.Title,
+			Cover:        v.Cover,
+			Abstract:     v.Abstract,
+			Avatar:       v.User.Avatar,
+			Username:     v.User.Username,
+			UserID:       v.UserID,
+		})
+	}
+	resp = types.ArticleList{
+		Count: count,
+		List:  articleList,
+	}
+	return
+}

@@ -76,5 +76,6 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.GET("/collect", api.ArticleCollect)
 		rg.GET("/owner", api.ArticleListByUerID)
 		rg.GET("/collect/owner", api.ArticleCollectList)
+		rg.GET("/digg/owner", api.ArticleDiggList)
 	})
 }

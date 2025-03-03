@@ -120,3 +120,11 @@ func (r *ArticleRepo) CollectList(ctx context.Context, userid int64) (articleIDL
 	}
 	return
 }
+func (r *ArticleRepo) DiggList(ctx context.Context, userid int64) (articleIDList []int64, err error) {
+	err = r.DB.Model(&model.Digg{}).Where("user_id = ?", userid).Pluck("article_id", &articleIDList).Error
+	if err != nil {
+		zlog.CtxErrorf(ctx, "获取点赞列表失败:%v", err)
+		return nil, response.ErrResp(err, response.GET_DIGG_ARTICLE_ERROR)
+	}
+	return
+}
