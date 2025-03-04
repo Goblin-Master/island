@@ -9,9 +9,6 @@ ENV GO111MODULE=on
 ENV CGO_ENABLED=0
 ENV GOPROXY=https://goproxy.cn,direct
 
-# 安装 CA 证书
-RUN apk add --no-cache ca-certificates
-
 # 复制代码到容器中
 COPY . .
 
