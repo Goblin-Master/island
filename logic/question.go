@@ -24,6 +24,7 @@ func (l *QuestionLogic) RunCode(ctx context.Context, req types.RunCodeReq) (resp
 		zlog.CtxErrorf(ctx, "run code error: %v", err)
 		return types.RunCodeResp{}, err
 	}
+
 	// 超出限制
 	if is_limit_out {
 		resp.Output = ""
@@ -34,5 +35,17 @@ func (l *QuestionLogic) RunCode(ctx context.Context, req types.RunCodeReq) (resp
 		resp.StatusCode = 0
 		resp.StatusMsg = "运行成功"
 	}
+
+	// 需要判断是否与预期答案相同
+	if resp.StatusCode == 0 && len(req.Ans) > 0 {
+		if runcodeUtils.CompareOutput(output, req.Ans) {
+			resp.StatusCode = 0
+			resp.StatusMsg = "答案正确"
+		} else {
+			resp.StatusCode = 2
+			resp.StatusMsg = "答案错误"
+		}
+	}
+
 	return
 }

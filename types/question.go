@@ -6,6 +6,7 @@ type RunCodeReq struct {
 	Stdin       string `json:"stdin"`
 	TimeLimit   int    `json:"time_limit"`
 	MemoryLimit int    `json:"memory_limit"`
+	Ans         string `json:"ans"`
 }
 
 type RunCodeResp struct {
