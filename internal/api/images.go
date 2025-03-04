@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
+	"strconv"
 	"tgwp/global"
 	"tgwp/log/zlog"
 	"tgwp/logic"
@@ -88,7 +89,7 @@ func UploadImages(c *gin.Context) {
 		return
 	}
 	response.NewResponse(c).Success(gin.H{
-		"id":      id,
+		"id":      strconv.FormatInt(id, 10),
 		"wedPath": m.WebPath(),
 	})
 }
