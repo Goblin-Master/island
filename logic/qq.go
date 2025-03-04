@@ -35,14 +35,8 @@ func (r *QQLoginLogic) QQLogin(ctx context.Context, req types.QQLoginReq) (types
 	userid, err := t.IsExist(info.OpenID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			//雪花id的生成格式
-			node, err := snowflake.NewNode(global.DEFAULT_NODE_ID)
-			if err != nil {
-				zlog.CtxErrorf(ctx, "NewNode err: %v", err)
-				return types.QQLoginResp{}, response.ErrResp(err, response.COMMON_FAIL)
-			}
-			//一般是生成12位的int64id，也可以生成string的，看snowflakes包
-			userid = snowflake.GetInt12Id(node)
+			//生成雪花id
+			userid = snowflake.GetIntId(global.Node)
 			user := model.User{
 				ID:       userid,
 				OpenID:   info.OpenID,

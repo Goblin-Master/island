@@ -67,7 +67,7 @@ func UploadImages(c *gin.Context) {
 		response.NewResponse(c).Error(response.COMMON_FAIL)
 	}
 	//一般是生成12位的int64id，也可以生成string的，看snowflakes包
-	id := snowflake.GetInt12Id(node)
+	id := snowflake.GetIntId(node)
 	m = model.Image{
 		ID:       id,
 		Filename: filename,

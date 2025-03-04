@@ -1,7 +1,7 @@
 package types
 
 type ImageResp struct {
-	ID       int64  `json:"id"`
+	ID       int64  `json:"id,string"`
 	Filename string `json:"filename"`
 	Path     string `json:"path"`
 	Size     int64  `json:"size"`

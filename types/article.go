@@ -11,13 +11,13 @@ type ArticleCreateReq struct {
 	Cover    string `json:"cover"`
 }
 type ArticleCreateResp struct {
-	ID int64 `json:"id"` // 文章id
+	ID int64 `json:"id,string"` // 文章id
 }
 
 type Article struct {
 	Island       string    `json:"island"`
 	CreatedAt    time.Time `json:"created_at"`
-	UserID       int64     `json:"userid"`
+	UserID       int64     `json:"userid,string"`
 	Abstract     string    `json:"abstract"`
 	Content      string    `json:"content" `
 	Title        string    `json:"title" `
@@ -26,7 +26,7 @@ type Article struct {
 	Avatar       string    `json:"avatar"`
 	DiggCount    int       `json:"digg_count"`
 	CollectCount int       `json:"collect_count"`
-	ID           int64     `json:"id"`
+	ID           int64     `json:"id,string"`
 }
 
 type ArticleList struct {

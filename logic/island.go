@@ -29,9 +29,9 @@ func (l *IslandLogic) GetIsland(ctx context.Context, req list.PageInfo) (resp ty
 		zlog.CtxInfof(ctx, "获取岛屿列表失败:%v", err)
 		return types.IslandListResp{}, response.ErrResp(err, response.ISLAND_GET_ERROR)
 	}
-	var list = make([]types.ListReq, 0)
+	var islandList = make([]types.ListResp, 0)
 	for _, v := range _list {
-		list = append(list, types.ListReq{
+		islandList = append(islandList, types.ListResp{
 			ID:     v.ID,
 			Name:   v.Name,
 			Path:   v.Path,
@@ -43,7 +43,7 @@ func (l *IslandLogic) GetIsland(ctx context.Context, req list.PageInfo) (resp ty
 		})
 	}
 	resp = types.IslandListResp{
-		List:  list,
+		List:  islandList,
 		Count: count,
 	}
 	return
@@ -51,14 +51,8 @@ func (l *IslandLogic) GetIsland(ctx context.Context, req list.PageInfo) (resp ty
 
 func (l *IslandLogic) CreateIsland(ctx context.Context, req types.IslandReq) (resp types.IslandResp, err error) {
 	defer utils.RecordTime(time.Now())()
-	//雪花id的生成格式
-	node, err := snowflake.NewNode(global.DEFAULT_NODE_ID)
-	if err != nil {
-		zlog.CtxErrorf(ctx, "NewNode err: %v", err)
-		return types.IslandResp{}, response.ErrResp(err, response.COMMON_FAIL)
-	}
-	//一般是生成12位的int64id，也可以生成string的，看snowflakes包
-	id := snowflake.GetInt12Id(node)
+	//生成雪花id
+	id := snowflake.GetIntId(global.Node)
 	// TODO:创建岛屿得登录，拿用户的id
 	userid := int64(793478004095)
 	r := repo.NewIslandRepo(global.DB)
