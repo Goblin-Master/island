@@ -8,13 +8,13 @@ import (
 	"tgwp/types"
 )
 
-func RunCode(c *gin.Context) {
+func ChatSendMessage(c *gin.Context) {
 	ctx := zlog.GetCtxFromGin(c)
-	req, err := types.BindReq[types.RunCodeReq](c)
+	req, err := types.BindReq[types.SendMessageReq](c)
 	if err != nil {
 		return
 	}
-	zlog.CtxInfof(ctx, "RunCode request: %v", req)
-	resp, err := logic.NewQuestionLogic().RunCode(ctx, req)
+	zlog.CtxInfof(ctx, "ChatSendMessage request: %v", req)
+	resp, err := logic.NewChatLogic().SendMessage(ctx, req)
 	response.Response(c, resp, err)
 }

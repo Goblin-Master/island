@@ -22,6 +22,7 @@ type RouteManager struct {
 	AiRoutes       *gin.RouterGroup //ai相关的路由组
 	QuestionRoutes *gin.RouterGroup //刷题功能相关的路由组
 	ArticleRouter  *gin.RouterGroup //文章相关的路由组
+	ChatRouter     *gin.RouterGroup //聊天相关的路由组
 }
 
 // NewRouteManager 创建一个新的 RouteManager 实例，包含各业务功能的路由组
@@ -33,6 +34,7 @@ func NewRouteManager(router *gin.Engine) *RouteManager {
 		AiRoutes:       router.Group("/api/ai"),       //ai相关的路由组
 		QuestionRoutes: router.Group("/api/question"), //刷题功能相关的路由组
 		ArticleRouter:  router.Group("/api/article"),  //文章相关的路由组
+		ChatRouter:     router.Group("/api/chat"),     //聊天相关的路由组
 	}
 }
 
@@ -64,6 +66,11 @@ func (rm *RouteManager) RegisterQuestionRoutes(handler PathHandler) {
 // RegisterArticleRoutes 注册文章相关的路由处理函数
 func (rm *RouteManager) RegisterArticleRoutes(handler PathHandler) {
 	handler(rm.ArticleRouter)
+}
+
+// RegisterChatRoutes 注册聊天相关的路由处理函数
+func (rm *RouteManager) RegisterChatRoutes(handler PathHandler) {
+	handler(rm.ChatRouter)
 }
 
 // RegisterMiddleware 根据组名为对应的路由组注册中间件

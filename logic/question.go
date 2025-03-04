@@ -18,6 +18,13 @@ func NewQuestionLogic() *QuestionLogic {
 
 func (l *QuestionLogic) RunCode(ctx context.Context, req types.RunCodeReq) (resp types.RunCodeResp, err error) {
 	defer utils.RecordTime(time.Now())()
+	// 默认值处理
+	if req.TimeLimit == 0 {
+		req.TimeLimit = 1000
+	}
+	if req.MemoryLimit == 0 {
+		req.MemoryLimit = 512 * 1024 * 1024
+	}
 	// 运行代码
 	output, is_limit_out, err := runcodeUtils.RunCode(req.Language, req.Code, req.Stdin, req.TimeLimit, req.MemoryLimit)
 	if err != nil {
