@@ -78,4 +78,8 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.GET("/collect/owner", api.ArticleCollectList)
 		rg.GET("/digg/owner", api.ArticleDiggList)
 	})
+
+	routeManager.RegisterChatRoutes(func(rg *gin.RouterGroup) {
+		rg.POST("/send", api.ChatSendMessage)
+	})
 }
