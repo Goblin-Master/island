@@ -1,7 +1,7 @@
 # 构建阶段
 FROM golang:1.22.3 AS builder
 
-# 设置环境变量（关键修改点）
+# 设置环境变量
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOPROXY=https://goproxy.io,direct
@@ -30,18 +30,12 @@ RUN apk add --no-cache tzdata && \
     ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone
 
-# 创建非root用户（安全增强）
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
 # 设置工作目录
 WORKDIR /app
 
-# 从构建阶段复制产物（权限设置）
-COPY --from=builder --chown=appuser:appgroup /app/island ./
-COPY --from=builder --chown=appuser:appgroup /app/config.yaml ./
-
-# 使用非特权用户运行
-USER appuser
+# 从构建阶段复制产物
+COPY --from=builder /app/island ./
+COPY --from=builder /app/config.yaml ./
 
 # 暴露端口
 EXPOSE 8080
