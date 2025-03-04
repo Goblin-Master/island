@@ -7,8 +7,7 @@ WORKDIR /app
 # 设置环境变量
 ENV GO111MODULE=on
 ENV CGO_ENABLED=0
-ENV GOPROXY=https://goproxy.tencent.com,direct
-ENV GODEBUG=x509ignoreCN
+ENV GOPROXY=https://goproxy.cn,direct
 
 # 安装 CA 证书
 RUN apk add --no-cache ca-certificates
