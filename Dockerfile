@@ -5,10 +5,12 @@ WORKDIR /app
 COPY . .
 
 # 设置Go环境变量
-RUN go env -w GO111MODULE=on \
-    && go env -w GOPROXY=https://goproxy.cn,direct \
-    && go env -w CGO_ENABLED=0 \
-    && go env \
+ENV GO111MODULE=on
+ENV GOPROXY=https://goproxy.cn,direct
+ENV CGO_ENABLED=0
+
+# 执行构建
+RUN go env \
     && go mod tidy \
     && go build -o island ./cmd/main.go
 
