@@ -3,6 +3,7 @@ package runcodeUtils
 import (
 	"encoding/json"
 	"github.com/levigross/grequests"
+	"strings"
 	"tgwp/log/zlog"
 	"tgwp/response"
 )
@@ -80,4 +81,34 @@ func RunCode(language string, code string, stdin string, time_limit int, memory_
 	}
 
 	return
+}
+
+// CompareOutput 比较运行结果与答案是否相同
+func CompareOutput(output, answer string) bool {
+	// 一行一行比较，忽略行尾空格
+	Out := strings.Split(output, "\n")
+	Ans := strings.Split(answer, "\n")
+	// 去除结尾空行
+	for len(Out) > 0 && Out[len(Out)-1] == "" {
+		Out = Out[:len(Out)-1]
+	}
+	for len(Ans) > 0 && Ans[len(Ans)-1] == "" {
+		Ans = Ans[:len(Ans)-1]
+	}
+	// 行数不同直接返回 false
+	if len(Out) != len(Ans) {
+		return false
+	}
+	// 开始逐行比较
+	for i := 0; i < len(Out); i++ {
+		// 忽略行尾空格
+		Out[i] = strings.TrimRight(Out[i], " ")
+		Ans[i] = strings.TrimRight(Ans[i], " ")
+		// 比较行内容
+		if Out[i] != Ans[i] {
+			return false
+		}
+	}
+	// 全部相同
+	return true
 }
