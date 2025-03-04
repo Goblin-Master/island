@@ -8,7 +8,7 @@ type Config struct {
 	DB    DBConfig          `mapstructure:"database"`
 	Redis RedisConfig       `mapstructure:"redis"`
 	QQ    QQConfig          `mapstructure:"qq"`
-	AI    AIConfig          `mapstructure:"ai"`
+	AI    []AIConfig        `mapstructure:"ai"`
 }
 
 type ApplicationConfig struct {
@@ -52,4 +52,5 @@ type QQConfig struct {
 type AIConfig struct {
 	Model  string `mapstructure:"model"`
 	ApiKey string `mapstructure:"apiKey"`
+	ApiUrl string `mapstructure:"apiUrl"`
 }

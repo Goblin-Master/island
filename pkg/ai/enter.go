@@ -62,7 +62,7 @@ func BaseRequest(ctx context.Context, r ChatRequest) (res *http.Response, err er
 		zlog.CtxErrorf(ctx, "ai请求参数格式化失败 %s", err)
 		return
 	}
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", global.Config.AI.ApiKey))
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", global.Config.AI[0].ApiKey))
 	req.Header.Add("Content-Type", "application/json")
 
 	// 设置http客户端,优化程序
@@ -92,7 +92,7 @@ func Chat(ctx context.Context, content string) (msg string, err error) {
 				Content: content,
 			},
 		},
-		Model:  global.Config.AI.Model,
+		Model:  global.Config.AI[0].Model,
 		Stream: false,
 	}
 	res, err := BaseRequest(ctx, r)
@@ -161,7 +161,7 @@ func ChatStream(ctx context.Context, content string, history string) (msgChan ch
 				Content: history,
 			},
 		},
-		Model:  global.Config.AI.Model,
+		Model:  global.Config.AI[0].Model,
 		Stream: true,
 	}
 	res, err := BaseRequest(ctx, r)

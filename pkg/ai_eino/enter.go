@@ -26,9 +26,9 @@ func Chat(ctx context.Context, content string) (msg string, err error) {
 		"question": content,
 	})
 	chatModel, err := openai.NewChatModel(ctx, &openai.ChatModelConfig{
-		BaseURL: "https://api.chatanywhere.tech",
-		Model:   global.Config.AI.Model,  // 使用的模型版本
-		APIKey:  global.Config.AI.ApiKey, // OpenAI API 密钥
+		BaseURL: global.Config.AI[0].ApiUrl,
+		Model:   global.Config.AI[0].Model,  // 使用的模型版本
+		APIKey:  global.Config.AI[0].ApiKey, // OpenAI API 密钥
 	})
 	if err != nil {
 		zlog.CtxErrorf(ctx, "创建模型失败 %s", err)
