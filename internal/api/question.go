@@ -15,14 +15,6 @@ func RunCode(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "RunCode request: %v", req)
-	// 默认值
-	if req.TimeLimit == 0 {
-		req.TimeLimit = 1000
-	}
-	if req.MemoryLimit == 0 {
-		req.MemoryLimit = 512 * 1024 * 1024
-	}
-
 	resp, err := logic.NewQuestionLogic().RunCode(ctx, req)
 	response.Response(c, resp, err)
 }
