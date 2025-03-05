@@ -5,11 +5,14 @@ import (
 	"github.com/cloudwego/eino-ext/components/model/openai"
 	"github.com/cloudwego/eino/components/prompt"
 	"github.com/cloudwego/eino/schema"
+	"strconv"
 	"tgwp/global"
 	"tgwp/log/zlog"
+	"tgwp/types"
+	"tgwp/utils/aiUtils"
 )
 
-func Chat(ctx context.Context, content string) (msg string, err error) {
+func Chat(ctx context.Context, req types.AiReq) (msg string, err error) {
 	// 创建模板，使用 FString 格式
 	template := prompt.FromMessages(schema.FString,
 		// 系统消息模板
@@ -23,12 +26,12 @@ func Chat(ctx context.Context, content string) (msg string, err error) {
 	messages, err := template.Format(context.Background(), map[string]any{
 		"role":     "知识渊博的island的人工智能助手",
 		"style":    "积极、温暖且专业",
-		"question": content,
+		"question": req.Content,
 	})
 	chatModel, err := openai.NewChatModel(ctx, &openai.ChatModelConfig{
-		BaseURL: global.Config.AI[0].ApiUrl,
-		Model:   global.Config.AI[0].Model,  // 使用的模型版本
-		APIKey:  global.Config.AI[0].ApiKey, // OpenAI API 密钥
+		BaseURL: global.Config.AI[req.Type].ApiUrl,
+		Model:   global.Config.AI[req.Type].Model,  // 使用的模型版本
+		APIKey:  global.Config.AI[req.Type].ApiKey, // OpenAI API 密钥
 	})
 	if err != nil {
 		zlog.CtxErrorf(ctx, "创建模型失败 %s", err)
@@ -41,4 +44,58 @@ func Chat(ctx context.Context, content string) (msg string, err error) {
 	}
 	msg = reader.Content
 	return
+}
+func StreamChat(ctx context.Context, user_id int64, req types.AiReq) (outStream *schema.StreamReader[*schema.Message], err error) {
+	// 创建模板，使用 FString 格式
+	template := prompt.FromMessages(schema.FString,
+		// 系统消息模板
+		schema.SystemMessage("你是一个{role}。你需要用{style}的语气回答问题。你的目标回答用户提出的问题。"),
+
+		// 插入需要的对话历史（新对话的话这里不填）
+		schema.MessagesPlaceholder("chat_history", true),
+
+		// 用户消息模板
+		schema.UserMessage("问题: {question}"),
+	)
+
+	// 使用模板生成消息
+	messages, err := template.Format(context.Background(), map[string]any{
+		"role":     "知识渊博的island的人工智能助手",
+		"style":    "积极、温暖且专业",
+		"question": req.Content,
+		// 对话历史（这个例子里模拟两轮对话历史）
+		"chat_history": loadHistory(ctx, user_id),
+	})
+	chatModel, err := openai.NewChatModel(ctx, &openai.ChatModelConfig{
+		ByAzure: false, // 是否使用 Azure OpenAI
+		BaseURL: global.Config.AI[req.Type].ApiUrl,
+		Model:   global.Config.AI[req.Type].Model,  // 使用的模型版本
+		APIKey:  global.Config.AI[req.Type].ApiKey, // OpenAI API 密钥
+	})
+	if err != nil {
+		zlog.CtxErrorf(ctx, "创建模型失败 %s", err)
+		return
+	}
+	return chatModel.Stream(ctx, messages)
+}
+func loadHistory(ctx context.Context, user_id int64) (history []*schema.Message) {
+	data, err := aiUtils.GetHistory(ctx, strconv.FormatInt(user_id, 10))
+	if err != nil {
+		zlog.CtxErrorf(ctx, "获取历史记录失败 %s", err)
+		return
+	}
+	for i, v := range data {
+		if i%2 == 0 {
+			history = append(history, &schema.Message{
+				Role:    schema.User,
+				Content: v,
+			})
+		} else {
+			history = append(history, &schema.Message{
+				Role:    schema.Assistant,
+				Content: v,
+			})
+		}
+	}
+	return history
 }

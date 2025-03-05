@@ -2,9 +2,10 @@ package articleUtils
 
 import (
 	"context"
+	"errors"
+	"github.com/go-redis/redis/v8"
 	"github.com/sirupsen/logrus"
 	"strconv"
-	"strings"
 	"tgwp/global"
 	"tgwp/log/zlog"
 )
@@ -18,7 +19,7 @@ const (
 
 func set(ctx context.Context, key articleCacheType, articleID int64, n int) {
 	num, err := global.Rdb.HGet(ctx, string(key), strconv.Itoa(int(articleID))).Int()
-	if err != nil && !strings.Contains(err.Error(), "redis: nil") {
+	if err != nil && !errors.Is(err, redis.Nil) {
 		zlog.CtxErrorf(ctx, "redis文章处理缓存错误: %s\n", err)
 		return
 	}
@@ -37,7 +38,7 @@ func SetCacheCollect(ctx context.Context, articleID int64, n int) {
 }
 func get(ctx context.Context, key articleCacheType, articleID int64) int {
 	num, err := global.Rdb.HGet(ctx, string(key), strconv.Itoa(int(articleID))).Int()
-	if err != nil && !strings.Contains(err.Error(), "redis: nil") {
+	if err != nil && !errors.Is(err, redis.Nil) {
 		zlog.CtxErrorf(ctx, "redis文章处理缓存错误: %s\n", err)
 		return 0
 	}
@@ -51,7 +52,7 @@ func GetCacheCollect(ctx context.Context, articleID int64) int {
 }
 func getAll(ctx context.Context, t articleCacheType) (mps map[int64]int) {
 	res, err := global.Rdb.HGetAll(ctx, string(t)).Result()
-	if err != nil && !strings.Contains(err.Error(), "redis: nil") {
+	if err != nil && !errors.Is(err, redis.Nil) {
 		logrus.Errorf("redis文章处理缓存错误: %s\n", err)
 		return
 	}

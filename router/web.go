@@ -62,6 +62,7 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	routeManager.RegisterAiRoutes(func(rg *gin.RouterGroup) {
 		rg.POST("/analysis", api.AiGenerateAbstract)
 		rg.GET("/chat", api.AiChatStream)
+		rg.DELETE("/", api.ClearHistory)
 	})
 
 	routeManager.RegisterQuestionRoutes(func(rg *gin.RouterGroup) {
