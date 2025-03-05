@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"strconv"
 	"tgwp/global"
 	"tgwp/log/zlog"
 	"tgwp/model"
@@ -71,10 +72,19 @@ func (l *ArticleLogic) ArticleList(ctx context.Context, req list.PageInfo) (resp
 	}
 	return
 }
-func (l *ArticleLogic) ArticleDelete(ctx context.Context, req list.RemoveReq) (resp string, err error) {
+func (l *ArticleLogic) ArticleDelete(ctx context.Context, req types.ArticleRemoveReq) (resp string, err error) {
 	defer utils.RecordTime(time.Now())()
+	var _req list.RemoveReq
+	for _, v := range req.Ids {
+		id, e := strconv.ParseInt(v, 10, 64)
+		if e != nil {
+			zlog.CtxErrorf(ctx, "类型转换失败 %s", e)
+			return "", response.ErrResp(err, response.COMMON_FAIL)
+		}
+		_req.Ids = append(_req.Ids, id)
+	}
 	db := repo.NewArticleRepo(global.DB)
-	articleList, err := db.GetArticleByIds(req)
+	articleList, err := db.GetArticleByIds(_req)
 	if err != nil {
 		zlog.CtxInfof(ctx, "获取文章列表失败:%v", err)
 		return
@@ -86,18 +96,28 @@ func (l *ArticleLogic) ArticleDelete(ctx context.Context, req list.RemoveReq) (r
 func (l *ArticleLogic) ArticleDigg(ctx context.Context, req types.ArticleDiggReq) (resp string, err error) {
 	defer utils.RecordTime(time.Now())()
 	// TODO:获取用户id填进去
-	req.UserID = int64(793478004095)
+	user_id := int64(793478004095)
+	article_id, e := strconv.ParseInt(req.ArticleID, 10, 64)
+	if e != nil {
+		zlog.CtxErrorf(ctx, "类型转换失败 %s", e)
+		return "", response.ErrResp(err, response.COMMON_FAIL)
+	}
 	db := repo.NewArticleRepo(global.DB)
-	resp, err = db.ArticleDigg(ctx, req)
+	resp, err = db.ArticleDigg(ctx, user_id, article_id)
 	return
 }
 
 func (l *ArticleLogic) ArticleCollect(ctx context.Context, req types.ArticleCollectReq) (resp string, err error) {
 	defer utils.RecordTime(time.Now())()
 	// TODO:获取用户id填进去
-	req.UserID = int64(793478004095)
+	user_id := int64(793478004095)
+	article_id, e := strconv.ParseInt(req.ArticleID, 10, 64)
+	if e != nil {
+		zlog.CtxErrorf(ctx, "类型转换失败 %s", e)
+		return "", response.ErrResp(err, response.COMMON_FAIL)
+	}
 	db := repo.NewArticleRepo(global.DB)
-	resp, err = db.ArticleCollect(ctx, req)
+	resp, err = db.ArticleCollect(ctx, user_id, article_id)
 	return
 }
 func (l *ArticleLogic) ArticleListByUserID(ctx context.Context, req list.PageInfo) (resp types.ArticleList, err error) {

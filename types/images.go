@@ -12,3 +12,7 @@ type ImageListResp struct {
 	List  []ImageResp `json:"list"`
 	Count int         `json:"count"`
 }
+
+type ImageRemoveReq struct {
+	Ids []string `json:"ids"`
+}

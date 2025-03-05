@@ -35,10 +35,12 @@ type ArticleList struct {
 }
 
 type ArticleDiggReq struct {
-	UserID    int64 `form:"user_id"`
-	ArticleID int64 `form:"article_id"`
+	ArticleID string `form:"article_id"`
 }
 type ArticleCollectReq struct {
-	UserID    int64 `form:"user_id"`
-	ArticleID int64 `form:"article_id"`
+	ArticleID string `form:"article_id"`
+}
+
+type ArticleRemoveReq struct {
+	Ids []string `form:"id"`
 }

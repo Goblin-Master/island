@@ -87,5 +87,5 @@ func ListQuery[T any](model T, option Options) (list []T, count int, err error) 
 
 // 用于绑定的id列表
 type RemoveReq struct {
-	Ids []int `json:"ids"`
+	Ids []int64 `json:"ids"`
 }

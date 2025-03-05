@@ -95,7 +95,7 @@ func UploadImages(c *gin.Context) {
 }
 func DeleteImages(c *gin.Context) {
 	ctx := zlog.GetCtxFromGin(c)
-	var req list.RemoveReq
+	var req types.ImageRemoveReq
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
 		response.NewResponse(c).Error(response.PARAM_NOT_VALID)

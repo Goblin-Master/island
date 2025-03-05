@@ -2,11 +2,13 @@ package logic
 
 import (
 	"context"
+	"strconv"
 	"tgwp/global"
 	"tgwp/log/zlog"
 	"tgwp/model"
 	"tgwp/repo"
 	"tgwp/repo/list"
+	"tgwp/response"
 	"tgwp/types"
 	"tgwp/utils"
 	"time"
@@ -26,9 +28,9 @@ func (r *ImagesLogic) GetImages(ctx context.Context, req list.PageInfo) (resp ty
 		zlog.CtxInfof(ctx, "获取图片列表失败:%v", err)
 		return
 	}
-	var list = make([]types.ImageResp, 0)
+	var imageList = make([]types.ImageResp, 0)
 	for _, v := range _list {
-		list = append(list, types.ImageResp{
+		imageList = append(imageList, types.ImageResp{
 			ID:       v.ID,
 			Filename: v.Filename,
 			Hash:     v.Hash,
@@ -39,14 +41,23 @@ func (r *ImagesLogic) GetImages(ctx context.Context, req list.PageInfo) (resp ty
 	}
 	resp = types.ImageListResp{
 		Count: count,
-		List:  list,
+		List:  imageList,
 	}
 	return
 }
-func (r *ImagesLogic) DeleteImages(ctx context.Context, req list.RemoveReq) (resp string, err error) {
+func (r *ImagesLogic) DeleteImages(ctx context.Context, req types.ImageRemoveReq) (resp string, err error) {
 	defer utils.RecordTime(time.Now())()
 	db := repo.NewImagesRepo(global.DB)
-	imageList, err := db.GetImagesByIds(req)
+	var _req list.RemoveReq
+	for _, v := range req.Ids {
+		id, e := strconv.ParseInt(v, 10, 64)
+		if e != nil {
+			zlog.CtxErrorf(ctx, "类型转换失败 %s", e)
+			return "", response.ErrResp(err, response.COMMON_FAIL)
+		}
+		_req.Ids = append(_req.Ids, id)
+	}
+	imageList, err := db.GetImagesByIds(_req)
 	if err != nil {
 		zlog.CtxInfof(ctx, "获取图片列表失败:%v", err)
 		return

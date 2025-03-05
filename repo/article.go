@@ -53,14 +53,14 @@ func (r *ArticleRepo) ArticleDelete(req []model.Article) (resp string, err error
 	resp = fmt.Sprintf("操作成功，成功删除了%d篇文章，失败删除了%d篇文章", successCount, failCount)
 	return
 }
-func (r *ArticleRepo) ArticleDigg(ctx context.Context, req types.ArticleDiggReq) (resp string, err error) {
+func (r *ArticleRepo) ArticleDigg(ctx context.Context, user_id, article_id int64) (resp string, err error) {
 	var digg model.Digg
-	err = r.DB.Where("user_id = ? and article_id = ?", req.UserID, req.ArticleID).Take(&digg).Error
+	err = r.DB.Where("user_id = ? and article_id = ?", user_id, article_id).Take(&digg).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			digg = model.Digg{
-				ArticleID: req.ArticleID,
-				UserID:    req.UserID,
+				ArticleID: article_id,
+				UserID:    user_id,
 			}
 			err = r.DB.Create(&digg).Error
 			if err != nil {
@@ -68,7 +68,7 @@ func (r *ArticleRepo) ArticleDigg(ctx context.Context, req types.ArticleDiggReq)
 				return "", response.ErrResp(err, response.ARTICLE_DIGG_ERROR)
 			}
 			// 点赞成功，设置缓存
-			articleUtils.SetCacheDigg(ctx, req.ArticleID, 1)
+			articleUtils.SetCacheDigg(ctx, article_id, 1)
 			return "点赞成功", nil
 		}
 		zlog.CtxErrorf(ctx, "点赞时数据库出现错误:%v", err)
@@ -80,17 +80,17 @@ func (r *ArticleRepo) ArticleDigg(ctx context.Context, req types.ArticleDiggReq)
 		return "", response.ErrResp(err, response.ARTICLE_DIGG_ERROR)
 	}
 	// 取消点赞成功，设置缓存
-	articleUtils.SetCacheDigg(ctx, req.ArticleID, -1)
+	articleUtils.SetCacheDigg(ctx, article_id, -1)
 	return "取消点赞成功", nil
 }
-func (r *ArticleRepo) ArticleCollect(ctx context.Context, req types.ArticleCollectReq) (resp string, err error) {
+func (r *ArticleRepo) ArticleCollect(ctx context.Context, user_id, article_id int64) (resp string, err error) {
 	var collect model.Collect
-	err = r.DB.Where("user_id = ? and article_id = ?", req.UserID, req.ArticleID).Take(&collect).Error
+	err = r.DB.Where("user_id = ? and article_id = ?", user_id, article_id).Take(&collect).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			collect = model.Collect{
-				ArticleID: req.ArticleID,
-				UserID:    req.UserID,
+				ArticleID: article_id,
+				UserID:    user_id,
 			}
 			err = r.DB.Create(&collect).Error
 			if err != nil {
@@ -98,7 +98,7 @@ func (r *ArticleRepo) ArticleCollect(ctx context.Context, req types.ArticleColle
 				return "", response.ErrResp(err, response.ARTICLE_COLLECT_ERROR)
 			}
 			// 收藏成功，设置缓存
-			articleUtils.SetCacheCollect(ctx, req.ArticleID, 1)
+			articleUtils.SetCacheCollect(ctx, article_id, 1)
 			return "收藏成功", nil
 		}
 		zlog.CtxErrorf(ctx, "收藏时数据库出现错误:%v", err)
@@ -110,7 +110,7 @@ func (r *ArticleRepo) ArticleCollect(ctx context.Context, req types.ArticleColle
 		return "", response.ErrResp(err, response.ARTICLE_COLLECT_ERROR)
 	}
 	// 取消点赞成功，设置缓存
-	articleUtils.SetCacheCollect(ctx, req.ArticleID, -1)
+	articleUtils.SetCacheCollect(ctx, article_id, -1)
 	return "取消收藏成功", nil
 }
 

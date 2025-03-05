@@ -42,13 +42,13 @@ func ModifyIsland(c *gin.Context) {
 
 func DeleteIsland(c *gin.Context) {
 	ctx := zlog.GetCtxFromGin(c)
-	var res types.IslandDeleteReq
-	err := c.ShouldBindQuery(&res)
+	var req types.IslandDeleteReq
+	err := c.ShouldBindQuery(&req)
 	if err != nil {
 		response.NewResponse(c).Error(response.PARAM_NOT_VALID)
 		return
 	}
-	zlog.CtxInfof(ctx, "DeleteIsland request: %v", res)
-	err = logic.NewIslandLogic().DeleteIsland(ctx, res)
+	zlog.CtxInfof(ctx, "DeleteIsland request: %v", req)
+	err = logic.NewIslandLogic().DeleteIsland(ctx, req)
 	response.Response(c, nil, err)
 }

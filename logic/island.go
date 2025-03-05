@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"strconv"
 	"tgwp/global"
 	"tgwp/log/zlog"
 	"tgwp/model"
@@ -86,25 +87,30 @@ func (l *IslandLogic) CreateIsland(ctx context.Context, req types.IslandReq) (re
 func (l *IslandLogic) ModifyIsland(ctx context.Context, req types.IslandReq) (resp types.IslandResp, err error) {
 	defer utils.RecordTime(time.Now())()
 	// TODO:创建岛屿得登录，拿用户的id
-	userid := int64(793478004095)
+	user_id := int64(793478004095)
 	r := repo.NewIslandRepo(global.DB)
-	if !r.IdentifyIslandById(req.ID, userid) {
+	island_id, e := strconv.ParseInt(req.ID, 10, 64)
+	if e != nil {
+		zlog.CtxErrorf(ctx, "类型转换:%v", err)
+		return types.IslandResp{}, response.ErrResp(err, response.COMMON_FAIL)
+	}
+	if !r.IdentifyIslandById(island_id, user_id) {
 		zlog.CtxInfof(ctx, "修改岛屿权限不足:%v", err)
 		return types.IslandResp{}, response.ErrResp(err, response.ISLAND_NOT_UPDATE)
 	}
-	if r.IdentifyIslandNameAndId(req.Name, req.ID) {
+	if r.IdentifyIslandNameAndId(req.Name, island_id) {
 		zlog.CtxInfof(ctx, "岛屿名字重复:%v", err)
 		return types.IslandResp{}, response.ErrResp(err, response.ISLAND_EXIST)
 	}
 	var island = model.Island{
-		ID:     req.ID,
+		ID:     island_id,
 		Name:   req.Name,
 		Path:   req.Path,
 		Height: req.Height,
 		Width:  req.Width,
 		XPoint: req.XPoint,
 		YPoint: req.YPoint,
-		UserID: userid,
+		UserID: user_id,
 	}
 	err = r.UpdatesIsland(island)
 	if err != nil {
@@ -112,17 +118,22 @@ func (l *IslandLogic) ModifyIsland(ctx context.Context, req types.IslandReq) (re
 		return types.IslandResp{}, response.ErrResp(err, response.ISLAND_UPDATE_ERROR)
 	}
 	resp = types.IslandResp{
-		ID:     req.ID,
-		UserID: userid,
+		ID:     island_id,
+		UserID: user_id,
 		Name:   req.Name,
 	}
 	return
 }
-func (l *IslandLogic) DeleteIsland(ctx context.Context, res types.IslandDeleteReq) (err error) {
+func (l *IslandLogic) DeleteIsland(ctx context.Context, req types.IslandDeleteReq) (err error) {
 	defer utils.RecordTime(time.Now())()
 	// TODO:创建岛屿得登录，拿用户的id
 	userid := int64(793478004095)
-	err = repo.NewIslandRepo(global.DB).DeleteIsland(res.ID, userid)
+	island_id, e := strconv.ParseInt(req.ID, 10, 64)
+	if e != nil {
+		zlog.CtxErrorf(ctx, "类型转换:%v", err)
+		return response.ErrResp(err, response.COMMON_FAIL)
+	}
+	err = repo.NewIslandRepo(global.DB).DeleteIsland(island_id, userid)
 	if err != nil {
 		zlog.CtxInfof(ctx, "删除岛屿失败:%v", err)
 		return response.ErrResp(err, response.ISLAND_DELETE_ERROR)

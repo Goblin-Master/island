@@ -39,17 +39,17 @@ func (r *IslandRepo) IdentifyIslandNameAndId(name string, id int64) (exist bool)
 	}
 	return
 }
-func (r *IslandRepo) IdentifyIslandById(id, userid int64) (exist bool) {
+func (r *IslandRepo) IdentifyIslandById(id, user_id int64) (exist bool) {
 	var island model.Island
-	err := r.DB.Where("id = ? and userid = ?", id, userid).Take(&island).Error
+	err := r.DB.Where("id = ? and user_id = ?", id, user_id).Take(&island).Error
 	if err == nil {
 		exist = true
 	}
 	return
 }
-func (r *IslandRepo) DeleteIsland(id, userid int64) (err error) {
+func (r *IslandRepo) DeleteIsland(id, user_id int64) (err error) {
 	var island model.Island
-	err = r.DB.Where("id = ? and userid = ?", id, userid).Take(&island).Error
+	err = r.DB.Where("id = ? and user_id = ?", id, user_id).Take(&island).Error
 	if err != nil {
 		return
 	}
