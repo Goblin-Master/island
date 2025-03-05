@@ -18,3 +18,14 @@ func ChatSendMessage(c *gin.Context) {
 	resp, err := logic.NewChatLogic().SendMessage(ctx, req)
 	response.Response(c, resp, err)
 }
+
+func ChatGetMessages(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	req, err := types.BindReq[types.GetMessagesReq](c)
+	if err != nil {
+		return
+	}
+	zlog.CtxInfof(ctx, "ChatGetMessages request: %v", req)
+	resp, err := logic.NewChatLogic().GetMessages(ctx, req)
+	response.Response(c, resp, err)
+}

@@ -89,6 +89,8 @@ func (rm *RouteManager) RegisterMiddleware(group string, middleware Middleware) 
 		rm.ArticleRouter.Use(middleware())
 	case "question":
 		rm.QuestionRoutes.Use(middleware())
+	case "chat":
+		rm.ChatRouter.Use(middleware())
 	}
 }
 
