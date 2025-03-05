@@ -10,7 +10,7 @@ type IslandReq struct {
 	YPoint float64 `json:"yPoint"`
 }
 type IslandResp struct {
-	UserID int64  `json:"userid,string"`
+	UserID int64  `json:"user_id,string"`
 	ID     int64  `json:"id,string"`
 	Name   string `json:"name"`
 }
@@ -32,7 +32,7 @@ type ListResp struct {
 	XPoint float64 `json:"xPoint"`
 	YPoint float64 `json:"yPoint"`
 	Path   string  `json:"path"`
-	UserID int64   `json:"userid,string"`
+	UserID int64   `json:"user_id,string"`
 }
 type IslandListResp struct {
 	List  []ListResp `json:"list"`

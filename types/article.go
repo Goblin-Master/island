@@ -17,7 +17,7 @@ type ArticleCreateResp struct {
 type Article struct {
 	Island       string    `json:"island"`
 	CreatedAt    time.Time `json:"created_at"`
-	UserID       int64     `json:"userid,string"`
+	UserID       int64     `json:"user_id,string"`
 	Abstract     string    `json:"abstract"`
 	Content      string    `json:"content" `
 	Title        string    `json:"title" `
@@ -35,10 +35,10 @@ type ArticleList struct {
 }
 
 type ArticleDiggReq struct {
-	UserID    int64 `form:"userid"`
+	UserID    int64 `form:"user_id"`
 	ArticleID int64 `form:"article_id"`
 }
 type ArticleCollectReq struct {
-	UserID    int64 `form:"userid"`
+	UserID    int64 `form:"user_id"`
 	ArticleID int64 `form:"article_id"`
 }
