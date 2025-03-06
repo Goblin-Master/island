@@ -28,7 +28,6 @@ func (l *ArticleLogic) ArticleCreate(ctx context.Context, req types.ArticleCreat
 		zlog.CtxInfof(ctx, "岛屿不存在")
 		return types.ArticleCreateResp{}, response.ErrResp(err, response.ISLAND_NOT_EXIST)
 	}
-	//TODO: 拿用户id
 	resp, err = repo.NewArticleRepo(global.DB).ArticleCreate(ctx, req)
 	if err != nil {
 		zlog.CtxInfof(ctx, "创建文章失败:%v", err)
@@ -84,7 +83,7 @@ func (l *ArticleLogic) ArticleDelete(ctx context.Context, req types.ArticleRemov
 		_req.Ids = append(_req.Ids, id)
 	}
 	db := repo.NewArticleRepo(global.DB)
-	articleList, err := db.GetArticleByIds(_req)
+	articleList, err := db.GetArticleByIds(_req, req.UserID)
 	if err != nil {
 		zlog.CtxInfof(ctx, "获取文章列表失败:%v", err)
 		return
@@ -95,36 +94,31 @@ func (l *ArticleLogic) ArticleDelete(ctx context.Context, req types.ArticleRemov
 
 func (l *ArticleLogic) ArticleDigg(ctx context.Context, req types.ArticleDiggReq) (resp string, err error) {
 	defer utils.RecordTime(time.Now())()
-	// TODO:获取用户id填进去
-	user_id := int64(793478004095)
 	article_id, e := strconv.ParseInt(req.ArticleID, 10, 64)
 	if e != nil {
 		zlog.CtxErrorf(ctx, "类型转换失败 %s", e)
 		return "", response.ErrResp(err, response.COMMON_FAIL)
 	}
 	db := repo.NewArticleRepo(global.DB)
-	resp, err = db.ArticleDigg(ctx, user_id, article_id)
+	resp, err = db.ArticleDigg(ctx, req.UserID, article_id)
 	return
 }
 
 func (l *ArticleLogic) ArticleCollect(ctx context.Context, req types.ArticleCollectReq) (resp string, err error) {
 	defer utils.RecordTime(time.Now())()
-	// TODO:获取用户id填进去
-	user_id := int64(793478004095)
 	article_id, e := strconv.ParseInt(req.ArticleID, 10, 64)
 	if e != nil {
 		zlog.CtxErrorf(ctx, "类型转换失败 %s", e)
 		return "", response.ErrResp(err, response.COMMON_FAIL)
 	}
 	db := repo.NewArticleRepo(global.DB)
-	resp, err = db.ArticleCollect(ctx, user_id, article_id)
+	resp, err = db.ArticleCollect(ctx, req.UserID, article_id)
 	return
 }
-func (l *ArticleLogic) ArticleListByUserID(ctx context.Context, req list.PageInfo) (resp types.ArticleList, err error) {
+func (l *ArticleLogic) ArticleListByUserID(ctx context.Context, req list.PageInfo, user_id int64) (resp types.ArticleList, err error) {
 	defer utils.RecordTime(time.Now())()
 	_list, count, err := list.ListQuery(model.Article{
-		// TODO:获取用户id填进去
-		UserID: int64(793478004095),
+		UserID: user_id,
 	}, list.Options{
 		PageInfo: req,
 		Preloads: []string{"User"},
@@ -159,11 +153,10 @@ func (l *ArticleLogic) ArticleListByUserID(ctx context.Context, req list.PageInf
 	}
 	return
 }
-func (l *ArticleLogic) ArticleCollectList(ctx context.Context, req list.PageInfo) (resp types.ArticleList, err error) {
+func (l *ArticleLogic) ArticleCollectList(ctx context.Context, req list.PageInfo, user_id int64) (resp types.ArticleList, err error) {
 	defer utils.RecordTime(time.Now())()
-	//TODO: 获取用户id填进去
 	//先查用户收藏表，获取所有文章id
-	collectList, err := repo.NewArticleRepo(global.DB).CollectList(ctx, int64(793478004095))
+	collectList, err := repo.NewArticleRepo(global.DB).CollectList(ctx, user_id)
 	if err != nil {
 		zlog.CtxInfof(ctx, "获取文章列表失败:%v", err)
 		return types.ArticleList{}, response.ErrResp(err, response.GET_COLLECT_ARTICLE_ERROR)
@@ -202,11 +195,10 @@ func (l *ArticleLogic) ArticleCollectList(ctx context.Context, req list.PageInfo
 	}
 	return
 }
-func (l *ArticleLogic) ArticleDiggList(ctx context.Context, req list.PageInfo) (resp types.ArticleList, err error) {
+func (l *ArticleLogic) ArticleDiggList(ctx context.Context, req list.PageInfo, user_id int64) (resp types.ArticleList, err error) {
 	defer utils.RecordTime(time.Now())()
-	//TODO: 获取用户id填进去
 	//先查用户点赞表，获取所有文章id
-	diggList, err := repo.NewArticleRepo(global.DB).DiggList(ctx, int64(793478004095))
+	diggList, err := repo.NewArticleRepo(global.DB).DiggList(ctx, user_id)
 	if err != nil {
 		zlog.CtxInfof(ctx, "获取文章列表失败:%v", err)
 		return types.ArticleList{}, response.ErrResp(err, response.GET_DIGG_ARTICLE_ERROR)

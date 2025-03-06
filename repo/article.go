@@ -40,8 +40,8 @@ func (r *ArticleRepo) ArticleCreate(ctx context.Context, req types.ArticleCreate
 	resp.ID = article.ID
 	return
 }
-func (r *ArticleRepo) GetArticleByIds(req list.RemoveReq) (resp []model.Article, err error) {
-	err = r.DB.Debug().Where("id in ?", req.Ids).Find(&resp).Error
+func (r *ArticleRepo) GetArticleByIds(req list.RemoveReq, user_id int64) (resp []model.Article, err error) {
+	err = r.DB.Debug().Where("user_id = ? and id in ?", user_id, req.Ids).Find(&resp).Error
 	return
 }
 func (r *ArticleRepo) ArticleDelete(req []model.Article) (resp string, err error) {
