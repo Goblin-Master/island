@@ -9,6 +9,7 @@ import (
 	"tgwp/response"
 	"tgwp/types"
 	"tgwp/utils/aiUtils"
+	"tgwp/utils/jwtUtils"
 )
 
 // AiGenerateAbstract
@@ -21,7 +22,7 @@ func AiGenerateAbstract(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	zlog.CtxInfof(ctx, " AiGenerateAbstract request: %s", req)
+	zlog.CtxInfof(ctx, " AiGenerateAbstract request: %v", req)
 	resp, err := logic.NewAILogic().GenerateAbstract(ctx, req)
 	response.Response(c, resp, err)
 }
@@ -36,10 +37,9 @@ func AiChatStream(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	zlog.CtxInfof(ctx, " AiChatStream request: %s", req)
-	//TODO: 获取用户id填进去
-	user_id := int64(793478004095)
-	outStream, err := ai_eino.StreamChat(ctx, user_id, req)
+	zlog.CtxInfof(ctx, " AiChatStream request: %v", req)
+	req.UserID = jwtUtils.GetUserId(c)
+	outStream, err := ai_eino.StreamChat(ctx, req)
 	if err != nil {
 		response.SSEFail(err.Error(), c)
 		return
@@ -56,12 +56,12 @@ func AiChatStream(c *gin.Context) {
 		response.SSESuccess(chunk.Content, c)
 	}
 	// 保存历史记录
-	aiUtils.InsertHistory(ctx, strconv.FormatInt(user_id, 10), req.Content, reply)
+	aiUtils.InsertHistory(ctx, strconv.FormatInt(req.UserID, 10), req.Content, reply)
 }
 
 func ClearHistory(c *gin.Context) {
 	ctx := zlog.GetCtxFromGin(c)
 	zlog.CtxInfof(ctx, "ClearHistory request")
-	err := logic.NewAILogic().ClearHistory(ctx)
+	err := logic.NewAILogic().ClearHistory(ctx, jwtUtils.GetUserId(c))
 	response.Response(c, nil, err)
 }

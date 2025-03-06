@@ -60,9 +60,9 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	})
 
 	routeManager.RegisterAiRoutes(func(rg *gin.RouterGroup) {
-		rg.POST("/analysis", api.AiGenerateAbstract)
-		rg.GET("/chat", api.AiChatStream)
-		rg.DELETE("/", api.ClearHistory)
+		rg.POST("/analysis", middleware.Authentication, api.AiGenerateAbstract)
+		rg.GET("/chat", middleware.Authentication, api.AiChatStream)
+		rg.DELETE("/", middleware.Authentication, api.ClearHistory)
 	})
 
 	routeManager.RegisterQuestionRoutes(func(rg *gin.RouterGroup) {
