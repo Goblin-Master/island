@@ -14,7 +14,7 @@ func QQLogin(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	zlog.CtxInfof(ctx, "QQLogin request: %s", req)
+	zlog.CtxInfof(ctx, "QQLogin request: %v", req)
 	resp, err := logic.NewQQLoginLogic().QQLogin(ctx, req)
 	response.Response(c, resp, err)
 }

@@ -1,7 +1,7 @@
 package types
 
 type QQLoginReq struct {
-	Code string `json:"code"`
+	Code string `form:"code"`
 }
 type QQLoginResp struct {
 	Username string `json:"username"`

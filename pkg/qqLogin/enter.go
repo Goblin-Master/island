@@ -9,11 +9,12 @@ import (
 	"net/url"
 	"strings"
 	"tgwp/global"
+	"tgwp/log/zlog"
 )
 
 type AccessToken struct {
 	AccessToken  string `json:"access_token"`
-	ExpiresIn    int    `json:"expires_in"`
+	ExpiresIn    string `json:"expires_in"`
 	OpenID       string `json:"openid"`
 	RefreshToken string `json:"refresh_token"` //refresh_token仅一次有效
 }
@@ -47,16 +48,21 @@ func getAccessToken(code string) (at AccessToken, err error) {
 	baseUrl.RawQuery = p.Encode()
 	res, err := http.Get(baseUrl.String())
 	if err != nil {
+		zlog.Errorf("getAccessToken:http.Get错误,msg:%s", err.Error())
 		err = errors.New("getAccessToken:http.Get错误")
 		return
 	}
 	byteData, err := io.ReadAll(res.Body)
+	fmt.Println(qq.RedirectUrl)
+	zlog.Infof("getAccessToken:http.Get返回数据 %s", string(byteData))
 	if err != nil {
+		zlog.Errorf("getAccessToken:io.ReadAll错误,msg:%s", err.Error())
 		err = errors.New("getAccessToken:io.ReadAll错误")
 		return
 	}
 	err = json.Unmarshal(byteData, &at)
 	if err != nil {
+		zlog.Errorf("getAccessToken:json.Unmarshal错误,msg:%s", err.Error())
 		err = errors.New("getAccessToken:json.Unmarshal错误")
 		return
 	}
@@ -79,6 +85,7 @@ func getUserInfo(at AccessToken) (userinfo UserInfo, err error) {
 	qq := global.Config.QQ
 	baseUrl, err := url.Parse("https://graph.qq.com/user/get_user_info")
 	if err != nil {
+		zlog.Errorf("getUserInfo:url.Parse错误,msg:%s", err.Error())
 		err = errors.New("getUserInfo:url.Parse错误")
 		return
 	}
@@ -94,11 +101,13 @@ func getUserInfo(at AccessToken) (userinfo UserInfo, err error) {
 	}
 	byteData, err := io.ReadAll(res.Body)
 	if err != nil {
+		zlog.Errorf("getUserInfo:io.ReadAll错误,msg:%s", err.Error())
 		err = errors.New("getUserInfo:io.ReadAll错误")
 		return
 	}
 	err = json.Unmarshal(byteData, &userinfo)
 	if err != nil {
+		zlog.Errorf("getUserInfo:json.Unmarshal错误,msg:%s", err.Error())
 		err = errors.New("getUserInfo:json.Unmarshal错误")
 		return
 	}

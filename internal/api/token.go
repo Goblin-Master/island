@@ -22,3 +22,8 @@ func RefreshToken(c *gin.Context) {
 	resp, err := logic.NewTokenLogic().RefreshToken(ctx, req)
 	response.Response(c, resp, err)
 }
+
+func AutoLogin(c *gin.Context) {
+	zlog.Infof("AutoLogin request")
+	response.Response(c, nil, nil)
+}
