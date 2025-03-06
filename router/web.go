@@ -81,14 +81,14 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	})
 
 	routeManager.RegisterArticleRoutes(func(rg *gin.RouterGroup) {
-		rg.POST("/", api.ArticleCreate)
+		rg.POST("/", middleware.Authentication, api.ArticleCreate)
 		rg.GET("/", api.ArticleList)
-		rg.DELETE("/", api.ArticleDelete)
-		rg.GET("/digg", api.ArticleDigg)
-		rg.GET("/collect", api.ArticleCollect)
-		rg.GET("/owner", api.ArticleListByUerID)
-		rg.GET("/collect/owner", api.ArticleCollectList)
-		rg.GET("/digg/owner", api.ArticleDiggList)
+		rg.DELETE("/", middleware.Authentication, api.ArticleDelete)
+		rg.GET("/digg", middleware.Authentication, api.ArticleDigg)
+		rg.GET("/collect", middleware.Authentication, api.ArticleCollect)
+		rg.GET("/owner", middleware.Authentication, api.ArticleListByUerID)
+		rg.GET("/collect/owner", middleware.Authentication, api.ArticleCollectList)
+		rg.GET("/digg/owner", middleware.Authentication, api.ArticleDiggList)
 	})
 
 	routeManager.RegisterChatRoutes(func(rg *gin.RouterGroup) {

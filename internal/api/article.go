@@ -7,6 +7,7 @@ import (
 	"tgwp/repo/list"
 	"tgwp/response"
 	"tgwp/types"
+	"tgwp/utils/jwtUtils"
 )
 
 func ArticleCreate(c *gin.Context) {
@@ -17,6 +18,7 @@ func ArticleCreate(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "CreateArticle request: %v", req)
+	req.UserID = jwtUtils.GetUserId(c)
 	resp, err := logic.NewArticleLogic().ArticleCreate(ctx, req)
 	response.Response(c, resp, err)
 }
@@ -42,6 +44,7 @@ func ArticleDelete(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "ArticleDelete request: %v", req)
+	req.UserID = jwtUtils.GetUserId(c)
 	resp, err := logic.NewArticleLogic().ArticleDelete(ctx, req)
 	response.Response(c, resp, err)
 }
@@ -53,6 +56,7 @@ func ArticleDigg(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "ArticleDigg request: %v", req)
+	req.UserID = jwtUtils.GetUserId(c)
 	resp, err := logic.NewArticleLogic().ArticleDigg(ctx, req)
 	response.Response(c, resp, err)
 }
@@ -63,6 +67,7 @@ func ArticleCollect(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "ArticleCollect request: %v", req)
+	req.UserID = jwtUtils.GetUserId(c)
 	resp, err := logic.NewArticleLogic().ArticleCollect(ctx, req)
 	response.Response(c, resp, err)
 }
@@ -74,7 +79,7 @@ func ArticleListByUerID(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "ArticleListByUerID request: %v", req)
-	resp, err := logic.NewArticleLogic().ArticleListByUserID(ctx, req)
+	resp, err := logic.NewArticleLogic().ArticleListByUserID(ctx, req, jwtUtils.GetUserId(c))
 	response.Response(c, resp, err)
 }
 
@@ -85,7 +90,7 @@ func ArticleCollectList(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "ArticleCollectList request: %v", req)
-	resp, err := logic.NewArticleLogic().ArticleCollectList(ctx, req)
+	resp, err := logic.NewArticleLogic().ArticleCollectList(ctx, req, jwtUtils.GetUserId(c))
 	response.Response(c, resp, err)
 }
 
@@ -96,6 +101,6 @@ func ArticleDiggList(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "ArticleDiggList request: %v", req)
-	resp, err := logic.NewArticleLogic().ArticleDiggList(ctx, req)
+	resp, err := logic.NewArticleLogic().ArticleDiggList(ctx, req, jwtUtils.GetUserId(c))
 	response.Response(c, resp, err)
 }
