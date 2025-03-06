@@ -54,8 +54,6 @@ func (l *IslandLogic) CreateIsland(ctx context.Context, req types.IslandReq) (re
 	defer utils.RecordTime(time.Now())()
 	//生成雪花id
 	id := snowflake.GetIntId(global.Node)
-	// TODO:创建岛屿得登录，拿用户的id
-	userid := int64(793478004095)
 	r := repo.NewIslandRepo(global.DB)
 	if r.IdentifyIslandName(req.Name) {
 		zlog.CtxInfof(ctx, "岛屿名字重复:%v", err)
@@ -69,7 +67,7 @@ func (l *IslandLogic) CreateIsland(ctx context.Context, req types.IslandReq) (re
 		Width:  req.Width,
 		XPoint: req.XPoint,
 		YPoint: req.YPoint,
-		UserID: userid,
+		UserID: req.UserID,
 	}
 	err = r.CreateIsland(island)
 	if err != nil {
@@ -78,7 +76,7 @@ func (l *IslandLogic) CreateIsland(ctx context.Context, req types.IslandReq) (re
 	}
 	resp = types.IslandResp{
 		ID:     id,
-		UserID: userid,
+		UserID: req.UserID,
 		Name:   req.Name,
 	}
 	return
@@ -86,15 +84,13 @@ func (l *IslandLogic) CreateIsland(ctx context.Context, req types.IslandReq) (re
 
 func (l *IslandLogic) ModifyIsland(ctx context.Context, req types.IslandReq) (resp types.IslandResp, err error) {
 	defer utils.RecordTime(time.Now())()
-	// TODO:创建岛屿得登录，拿用户的id
-	user_id := int64(793478004095)
 	r := repo.NewIslandRepo(global.DB)
 	island_id, e := strconv.ParseInt(req.ID, 10, 64)
 	if e != nil {
 		zlog.CtxErrorf(ctx, "类型转换:%v", err)
 		return types.IslandResp{}, response.ErrResp(err, response.COMMON_FAIL)
 	}
-	if !r.IdentifyIslandById(island_id, user_id) {
+	if !r.IdentifyIslandById(island_id, req.UserID) {
 		zlog.CtxInfof(ctx, "修改岛屿权限不足:%v", err)
 		return types.IslandResp{}, response.ErrResp(err, response.ISLAND_NOT_UPDATE)
 	}
@@ -110,7 +106,7 @@ func (l *IslandLogic) ModifyIsland(ctx context.Context, req types.IslandReq) (re
 		Width:  req.Width,
 		XPoint: req.XPoint,
 		YPoint: req.YPoint,
-		UserID: user_id,
+		UserID: req.UserID,
 	}
 	err = r.UpdatesIsland(island)
 	if err != nil {
@@ -119,21 +115,19 @@ func (l *IslandLogic) ModifyIsland(ctx context.Context, req types.IslandReq) (re
 	}
 	resp = types.IslandResp{
 		ID:     island_id,
-		UserID: user_id,
+		UserID: req.UserID,
 		Name:   req.Name,
 	}
 	return
 }
 func (l *IslandLogic) DeleteIsland(ctx context.Context, req types.IslandDeleteReq) (err error) {
 	defer utils.RecordTime(time.Now())()
-	// TODO:创建岛屿得登录，拿用户的id
-	userid := int64(793478004095)
 	island_id, e := strconv.ParseInt(req.ID, 10, 64)
 	if e != nil {
 		zlog.CtxErrorf(ctx, "类型转换:%v", err)
 		return response.ErrResp(err, response.COMMON_FAIL)
 	}
-	err = repo.NewIslandRepo(global.DB).DeleteIsland(island_id, userid)
+	err = repo.NewIslandRepo(global.DB).DeleteIsland(island_id, req.UserID)
 	if err != nil {
 		zlog.CtxInfof(ctx, "删除岛屿失败:%v", err)
 		return response.ErrResp(err, response.ISLAND_DELETE_ERROR)

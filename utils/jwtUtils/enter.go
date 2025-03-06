@@ -3,6 +3,7 @@ package jwtUtils
 import (
 	"context"
 	"errors"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"strings"
 	"tgwp/global"
@@ -97,4 +98,19 @@ func FullToken(class string, userid int64) (data TokenData) {
 		data.Class = global.AUTH_ENUMS_RTOKEN
 	}
 	return
+}
+
+// GetUserId
+//
+//	@Description: 这个方法只能是使用了鉴权中间件才能用
+//	@param c
+//	@return int64
+func GetUserId(c *gin.Context) int64 {
+	if data, exists := c.Get(global.TOKEN_USER_ID); exists {
+		user_id, ok := data.(int64)
+		if ok {
+			return user_id
+		}
+	}
+	return 0
 }

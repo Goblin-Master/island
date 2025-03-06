@@ -7,6 +7,7 @@ import (
 	"tgwp/internal/api"
 	"tgwp/log/zlog"
 	"tgwp/manager"
+	"tgwp/middleware"
 )
 
 // RunServer 启动服务器 路由层
@@ -41,10 +42,9 @@ func listen() (*gin.Engine, error) {
 func registerRoutes(routeManager *manager.RouteManager) {
 
 	routeManager.RegisterCommonRoutes(func(rg *gin.RouterGroup) {
-		rg.GET("/test", api.Template)
 		rg.POST("/token", api.RefreshToken)
-		rg.POST("/images", api.UploadImages)
-		rg.DELETE("/images", api.DeleteImages)
+		rg.POST("/images", middleware.Authentication, api.UploadImages)
+		rg.DELETE("/images", middleware.Authentication, api.DeleteImages)
 		rg.GET("/images", api.GetImages)
 	})
 
@@ -53,16 +53,16 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	})
 
 	routeManager.RegisterIslandRoutes(func(rg *gin.RouterGroup) {
-		rg.GET("/", api.GetIsland)       //获取岛屿列表
-		rg.POST("/", api.CreateIsland)   //创建岛屿
-		rg.PUT("/", api.ModifyIsland)    //修改岛屿
-		rg.DELETE("/", api.DeleteIsland) //删除岛屿
+		rg.GET("/", api.GetIsland)                                  //获取岛屿列表
+		rg.POST("/", middleware.Authentication, api.CreateIsland)   //创建岛屿
+		rg.PUT("/", middleware.Authentication, api.ModifyIsland)    //修改岛屿
+		rg.DELETE("/", middleware.Authentication, api.DeleteIsland) //删除岛屿
 	})
 
 	routeManager.RegisterAiRoutes(func(rg *gin.RouterGroup) {
-		rg.POST("/analysis", api.AiGenerateAbstract)
-		rg.GET("/chat", api.AiChatStream)
-		rg.DELETE("/", api.ClearHistory)
+		rg.POST("/analysis", middleware.Authentication, api.AiGenerateAbstract)
+		rg.GET("/chat", middleware.Authentication, api.AiChatStream)
+		rg.DELETE("/", middleware.Authentication, api.ClearHistory)
 	})
 
 	routeManager.RegisterQuestionRoutes(func(rg *gin.RouterGroup) {

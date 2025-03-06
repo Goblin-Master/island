@@ -24,8 +24,7 @@ func (l *AILogic) GenerateAbstract(ctx context.Context, req types.AiReq) (resp t
 	return
 }
 
-func (l *AILogic) ClearHistory(ctx context.Context) (err error) {
-	user_id := int64(793478004095)
+func (l *AILogic) ClearHistory(ctx context.Context, user_id int64) (err error) {
 	err = aiUtils.ClearHistory(ctx, strconv.FormatInt(user_id, 10))
 	if err != nil {
 		zlog.CtxErrorf(ctx, "清除历史记录失败 %s", err)

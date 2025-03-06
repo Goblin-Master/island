@@ -7,6 +7,7 @@ import (
 	"tgwp/repo/list"
 	"tgwp/response"
 	"tgwp/types"
+	"tgwp/utils/jwtUtils"
 )
 
 func GetIsland(c *gin.Context) {
@@ -26,6 +27,7 @@ func CreateIsland(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "CreateIsland request: %v", req)
+	req.UserID = jwtUtils.GetUserId(c)
 	resp, err := logic.NewIslandLogic().CreateIsland(ctx, req)
 	response.Response(c, resp, err)
 }
@@ -35,6 +37,7 @@ func ModifyIsland(c *gin.Context) {
 	if err != nil {
 		return
 	}
+	req.UserID = jwtUtils.GetUserId(c)
 	zlog.CtxInfof(ctx, "ModifyIsland request: %v", req)
 	resp, err := logic.NewIslandLogic().ModifyIsland(ctx, req)
 	response.Response(c, resp, err)
@@ -49,6 +52,7 @@ func DeleteIsland(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "DeleteIsland request: %v", req)
+	req.UserID = jwtUtils.GetUserId(c)
 	err = logic.NewIslandLogic().DeleteIsland(ctx, req)
 	response.Response(c, nil, err)
 }

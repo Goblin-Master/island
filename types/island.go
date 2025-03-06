@@ -1,6 +1,7 @@
 package types
 
 type IslandReq struct {
+	UserID int64   `json:"-"`
 	ID     string  `json:"id"` // 岛屿id
 	Name   string  `json:"name"`
 	Path   string  `json:"path"`
@@ -39,5 +40,6 @@ type IslandListResp struct {
 	Count int        `json:"count"`
 }
 type IslandDeleteReq struct {
-	ID string `form:"id"`
+	UserID int64  `json:"-"`
+	ID     string `form:"id"`
 }

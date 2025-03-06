@@ -45,7 +45,7 @@ func Chat(ctx context.Context, req types.AiReq) (msg string, err error) {
 	msg = reader.Content
 	return
 }
-func StreamChat(ctx context.Context, user_id int64, req types.AiReq) (outStream *schema.StreamReader[*schema.Message], err error) {
+func StreamChat(ctx context.Context, req types.AiReq) (outStream *schema.StreamReader[*schema.Message], err error) {
 	// 创建模板，使用 FString 格式
 	template := prompt.FromMessages(schema.FString,
 		// 系统消息模板
@@ -64,7 +64,7 @@ func StreamChat(ctx context.Context, user_id int64, req types.AiReq) (outStream 
 		"style":    "积极、温暖且专业",
 		"question": req.Content,
 		// 对话历史（这个例子里模拟两轮对话历史）
-		"chat_history": loadHistory(ctx, user_id),
+		"chat_history": loadHistory(ctx, req.UserID),
 	})
 	chatModel, err := openai.NewChatModel(ctx, &openai.ChatModelConfig{
 		ByAzure: false, // 是否使用 Azure OpenAI

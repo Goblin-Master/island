@@ -32,13 +32,13 @@ func (r *QQLoginLogic) QQLogin(ctx context.Context, req types.QQLoginReq) (types
 	}
 	// 入库
 	t := repo.NewQQLoginRepo(global.DB)
-	userid, err := t.IsExist(info.OpenID)
+	user_id, err := t.IsExist(info.OpenID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			//生成雪花id
-			userid = snowflake.GetIntId(global.Node)
+			user_id = snowflake.GetIntId(global.Node)
 			user := model.User{
-				ID:       userid,
+				ID:       user_id,
 				OpenID:   info.OpenID,
 				Avatar:   info.Avatar,
 				Username: info.Nickname,
@@ -54,12 +54,12 @@ func (r *QQLoginLogic) QQLogin(ctx context.Context, req types.QQLoginReq) (types
 		}
 	}
 	// 颁发token
-	atoken, err := jwtUtils.GenToken(jwtUtils.FullToken(global.AUTH_ENUMS_ATOKEN, userid))
+	atoken, err := jwtUtils.GenToken(jwtUtils.FullToken(global.AUTH_ENUMS_ATOKEN, user_id))
 	if err != nil {
 		zlog.CtxErrorf(ctx, "GenToken err: %v", err)
 		return types.QQLoginResp{}, response.ErrResp(err, response.GENERATE_TOKEN_ERROR)
 	}
-	rtoken, err := jwtUtils.GenToken(jwtUtils.FullToken(global.AUTH_ENUMS_RTOKEN, userid))
+	rtoken, err := jwtUtils.GenToken(jwtUtils.FullToken(global.AUTH_ENUMS_RTOKEN, user_id))
 	if err != nil {
 		zlog.CtxErrorf(ctx, "GenToken err: %v", err)
 		return types.QQLoginResp{}, response.ErrResp(err, response.GENERATE_TOKEN_ERROR)
