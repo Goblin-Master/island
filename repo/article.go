@@ -30,7 +30,7 @@ func (r *ArticleRepo) ArticleCreate(ctx context.Context, req types.ArticleCreate
 		Abstract: req.Abstract,
 		Content:  req.Content,
 		Title:    req.Title,
-		UserID:   int64(793478004095),
+		UserID:   req.UserID,
 	}
 	err = r.DB.Create(&article).Error
 	if err != nil {
