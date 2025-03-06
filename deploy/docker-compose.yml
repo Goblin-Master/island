@@ -29,6 +29,8 @@ services:
   island:
     image: "crpi-ihkn2rvtrqwwopyn.cn-hongkong.personal.cr.aliyuncs.com/my_island/island:backend"
     container_name: island
+    ports:
+      - "8080:8080"
     restart: always
     networks:
       island_network:
