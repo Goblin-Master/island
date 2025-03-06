@@ -67,6 +67,17 @@ func registerRoutes(routeManager *manager.RouteManager) {
 
 	routeManager.RegisterQuestionRoutes(func(rg *gin.RouterGroup) {
 		rg.POST("/run-code", api.RunCode)
+
+		rg.POST("/create-question", api.CreateQuestion)
+		rg.POST("/create-question-bank", api.CreateQuestionBank)
+		rg.POST("/add-question", api.AddQuestion)
+		rg.POST("/add-question-bank", api.AddQuestionBank)
+
+		rg.GET("/get-question", api.GetQuestion)
+		rg.GET("/get-question-bank", api.GetQuestionBank)
+		rg.GET("/get-question-list", api.GetQuestionList)
+		rg.GET("/get-question-bank-list", api.GetQuestionBankList)
+
 	})
 
 	routeManager.RegisterArticleRoutes(func(rg *gin.RouterGroup) {

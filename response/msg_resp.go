@@ -29,15 +29,18 @@ var (
 	REDIS_ERROR                 = MsgCode{60005, "redis错误"}
 	FEISHU_ERROR                = MsgCode{60006, "飞书API错误"}
 	PISTON_API_ERROR            = MsgCode{60007, "Piston API错误"}
+	JSON_UNMARSHAL_ERROR        = MsgCode{60008, "json反序列化失败"}
 
 	/* 参数错误：10000 ~ 19999 */
-	PARAM_NOT_VALID    = MsgCode{10001, "参数无效"}
-	PARAM_IS_BLANK     = MsgCode{10002, "参数为空"}
-	PARAM_TYPE_ERROR   = MsgCode{10003, "参数类型错误"}
-	PARAM_NOT_COMPLETE = MsgCode{10004, "参数缺失"}
-	MEMBER_NOT_EXIST   = MsgCode{10005, "用户不存在"}
-	MESSAGE_NOT_EXIST  = MsgCode{10006, "消息不存在"}
-	LANGUAGE_NOT_EXIST = MsgCode{10007, "编程语言不存在"}
+	PARAM_NOT_VALID         = MsgCode{10001, "参数无效"}
+	PARAM_IS_BLANK          = MsgCode{10002, "参数为空"}
+	PARAM_TYPE_ERROR        = MsgCode{10003, "参数类型错误"}
+	PARAM_NOT_COMPLETE      = MsgCode{10004, "参数缺失"}
+	MEMBER_NOT_EXIST        = MsgCode{10005, "用户不存在"}
+	MESSAGE_NOT_EXIST       = MsgCode{10006, "消息不存在"}
+	LANGUAGE_NOT_EXIST      = MsgCode{10007, "编程语言不存在"}
+	QUESTION_NOT_EXIST      = MsgCode{10008, "题目不存在"}
+	QUESTION_BANK_NOT_EXIST = MsgCode{10009, "题库不存在"}
 
 	/* 用户错误 20000 ~ 29999 */
 	USER_NOT_LOGIN             = MsgCode{20001, "用户未登录"}
