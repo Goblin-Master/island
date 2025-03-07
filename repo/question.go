@@ -3,6 +3,7 @@ package repo
 import (
 	"errors"
 	"gorm.io/gorm"
+	"tgwp/log/zlog"
 	"tgwp/model"
 )
 
@@ -53,10 +54,12 @@ func (r *QuestionRepo) GetQuestionBank(id int64) (model.QuestionBank, error) {
 // GetQuestionBankQuestionCount 获取题库题目数量
 func (r *QuestionRepo) GetQuestionBankQuestionCount(id int64) (int, error) {
 	var count int64
-	err := r.DB.Model(&model.QuestionBank{}).Where("id =?", id).Count(&count).Error
+	err := r.DB.Model(&model.QuestionBankQuestion{}).Where("question_bank_id =?", id).Count(&count).Error
+	zlog.Debugf("题库 %d 题目数量: %d", id, count)
 	return int(count), err
 }
 
+// GetQuestionList 获取题库题目列表
 func (r *QuestionRepo) GetQuestionList(questionBankID int64, offset, limit int) ([]model.Question, error) {
 	var questions []model.Question
 
@@ -72,6 +75,21 @@ func (r *QuestionRepo) GetQuestionList(questionBankID int64, offset, limit int) 
 	return questions, err
 }
 
+func (r *QuestionRepo) GetRandomQuestions(questionBankID int64, count int) ([]model.Question, error) {
+	var questions []model.Question
+	err := r.DB.
+		Select("questions.*").
+		Joins("INNER JOIN question_bank_questions ON questions.id = question_bank_questions.question_id").
+		Where("question_bank_questions.question_bank_id = ?", questionBankID).
+		Where("questions.type <= 3").
+		Limit(count).
+		Order("RAND()").
+		Find(&questions).Error
+
+	return questions, err
+}
+
+// GetQuestionBankList 获取岛屿题库列表
 func (r *QuestionRepo) GetQuestionBankList(islandID int64) ([]model.QuestionBank, error) {
 	var questionBanks []model.QuestionBank
 
