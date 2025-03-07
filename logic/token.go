@@ -28,7 +28,7 @@ func (l *TokenLogic) RefreshToken(ctx context.Context, req types.TokenReq) (resp
 	data, err := jwtUtils.IdentifyToken(ctx, req.Token)
 	if err != nil {
 		//对应token无效，直接让他返回
-		return resp, err
+		return resp, response.ErrResp(err, response.TOKEN_IS_EXPIRED)
 	}
 	//判断其是否为rtoken
 	if data.Class != global.AUTH_ENUMS_RTOKEN {

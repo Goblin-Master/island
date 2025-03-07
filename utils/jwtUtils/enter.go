@@ -114,3 +114,21 @@ func GetUserId(c *gin.Context) int64 {
 	}
 	return 0
 }
+
+// ForTest
+//
+//	@Description: 用于测试，可以自己生成一个自定义时间的atoken
+//	@param user_id
+//	@param duration
+func ForTest(user_id int64, duration time.Duration) (atoken string) {
+	var data TokenData
+	data.Userid = user_id
+	data.Time = duration
+	data.Class = global.AUTH_ENUMS_ATOKEN
+	atoken, err := GenToken(data)
+	if err != nil {
+		zlog.Errorf("ForTest err: %v", err)
+		return
+	}
+	return
+}
