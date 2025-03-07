@@ -77,14 +77,14 @@ func (l *QuestionLogic) CreateQuestion(ctx context.Context, req types.CreateQues
 
 func (l *QuestionLogic) CreateQuestionBank(ctx context.Context, req types.CreateQuestionBankReq) (resp types.CreateQuestionBankResp, err error) {
 	defer utils.RecordTime(time.Now())()
-	// 如果指定了岛屿ID，先判断题库是否存在
-	questionBankID, err := strconv.ParseInt(req.IslandID, 10, 64)
-	if err != nil {
-		zlog.CtxErrorf(ctx, "%v 转换 int64 错误: %v", req.IslandID, err)
-		return resp, response.ErrResp(err, response.PARAM_NOT_VALID)
-	}
+	// 如果指定了岛屿ID，先判断岛屿是否存在
 	if len(req.IslandID) > 0 {
-		if !repo.NewQuestionRepo(global.DB).CheckQuestionBankExist(questionBankID) {
+		IslandID, err := strconv.ParseInt(req.IslandID, 10, 64)
+		if err != nil {
+			zlog.CtxErrorf(ctx, "%v 转换 int64 错误: %v", req.IslandID, err)
+			return resp, response.ErrResp(err, response.PARAM_NOT_VALID)
+		}
+		if !repo.NewQuestionRepo(global.DB).CheckQuestionBankExist(IslandID) {
 			zlog.CtxErrorf(ctx, "题库 %d 不存在", req.IslandID)
 			return resp, response.ErrResp(err, response.QUESTION_BANK_NOT_EXIST)
 		}

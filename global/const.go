@@ -16,6 +16,11 @@ const (
 	TOKEN_USER_ID            = "UserId"
 	IMAGE_PATH               = "uploads"       //自定义图片路径
 	IMAGE_SIZE               = 1024 * 1024 * 3 //自定义图片大小
+
+	QUESTION_TYPE_CHOICE     = 1 // 选择题
+	QUESTION_TYPE_MULTIPLE   = 2 // 多选题
+	QUESTION_TYPE_BLANK      = 3 // 填空题
+	QUESTION_TYPE_SUBJECTIVE = 4 // 主观题
 )
 
 var Node, _ = snowflake.NewNode(DEFAULT_NODE_ID)
