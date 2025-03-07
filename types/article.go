@@ -1,6 +1,9 @@
 package types
 
-import "time"
+import (
+	"tgwp/repo/list"
+	"time"
+)
 
 type ArticleCreateReq struct {
 	Island   string `json:"island" binding:"required"`
@@ -35,15 +38,20 @@ type ArticleList struct {
 }
 
 type ArticleDiggReq struct {
-	UserID    int64  `form:"-"`
+	UserID    string `form:"user_id"`
 	ArticleID string `form:"article_id"`
 }
 type ArticleCollectReq struct {
-	UserID    int64  `form:"-"`
+	UserID    string `form:"user_id"`
 	ArticleID string `form:"article_id"`
 }
 
 type ArticleRemoveReq struct {
 	UserID int64    `form:"-"`
 	Ids    []string `form:"id"`
+}
+
+type ArticleListReq struct {
+	UserID string `form:"user_id"`
+	list.PageInfo
 }

@@ -94,33 +94,48 @@ func (l *ArticleLogic) ArticleDelete(ctx context.Context, req types.ArticleRemov
 
 func (l *ArticleLogic) ArticleDigg(ctx context.Context, req types.ArticleDiggReq) (resp string, err error) {
 	defer utils.RecordTime(time.Now())()
-	article_id, e := strconv.ParseInt(req.ArticleID, 10, 64)
-	if e != nil {
-		zlog.CtxErrorf(ctx, "类型转换失败 %s", e)
+	article_id, err := strconv.ParseInt(req.ArticleID, 10, 64)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "类型转换失败 %s", err)
 		return "", response.ErrResp(err, response.COMMON_FAIL)
 	}
 	db := repo.NewArticleRepo(global.DB)
-	resp, err = db.ArticleDigg(ctx, req.UserID, article_id)
+	user_id, err := strconv.ParseInt(req.UserID, 10, 64)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "类型转换失败 %s", err)
+		return "", response.ErrResp(err, response.COMMON_FAIL)
+	}
+	resp, err = db.ArticleDigg(ctx, user_id, article_id)
 	return
 }
 
 func (l *ArticleLogic) ArticleCollect(ctx context.Context, req types.ArticleCollectReq) (resp string, err error) {
 	defer utils.RecordTime(time.Now())()
-	article_id, e := strconv.ParseInt(req.ArticleID, 10, 64)
-	if e != nil {
-		zlog.CtxErrorf(ctx, "类型转换失败 %s", e)
+	article_id, err := strconv.ParseInt(req.ArticleID, 10, 64)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "类型转换失败 %s", err)
 		return "", response.ErrResp(err, response.COMMON_FAIL)
 	}
 	db := repo.NewArticleRepo(global.DB)
-	resp, err = db.ArticleCollect(ctx, req.UserID, article_id)
+	user_id, err := strconv.ParseInt(req.UserID, 10, 64)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "类型转换失败 %s", err)
+		return "", response.ErrResp(err, response.COMMON_FAIL)
+	}
+	resp, err = db.ArticleCollect(ctx, user_id, article_id)
 	return
 }
-func (l *ArticleLogic) ArticleListByUserID(ctx context.Context, req list.PageInfo, user_id int64) (resp types.ArticleList, err error) {
+func (l *ArticleLogic) ArticleListByUserID(ctx context.Context, req types.ArticleListReq) (resp types.ArticleList, err error) {
 	defer utils.RecordTime(time.Now())()
+	user_id, err := strconv.ParseInt(req.UserID, 10, 64)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "类型转换失败 %s", err)
+		return types.ArticleList{}, response.ErrResp(err, response.COMMON_FAIL)
+	}
 	_list, count, err := list.ListQuery(model.Article{
 		UserID: user_id,
 	}, list.Options{
-		PageInfo: req,
+		PageInfo: req.PageInfo,
 		Preloads: []string{"User"},
 		Order:    "created_at desc",
 		Likes:    []string{"title", "island"},

@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"strconv"
 	"tgwp/log/zlog"
 	"tgwp/logic"
 	"tgwp/repo/list"
@@ -56,7 +57,9 @@ func ArticleDigg(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "ArticleDigg request: %v", req)
-	req.UserID = jwtUtils.GetUserId(c)
+	if req.UserID == "" {
+		req.UserID = strconv.FormatInt(jwtUtils.GetUserId(c), 10)
+	}
 	resp, err := logic.NewArticleLogic().ArticleDigg(ctx, req)
 	response.Response(c, resp, err)
 }
@@ -67,19 +70,24 @@ func ArticleCollect(c *gin.Context) {
 		return
 	}
 	zlog.CtxInfof(ctx, "ArticleCollect request: %v", req)
-	req.UserID = jwtUtils.GetUserId(c)
+	if req.UserID == "" {
+		req.UserID = strconv.FormatInt(jwtUtils.GetUserId(c), 10)
+	}
 	resp, err := logic.NewArticleLogic().ArticleCollect(ctx, req)
 	response.Response(c, resp, err)
 }
 func ArticleListByUerID(c *gin.Context) {
 	ctx := zlog.GetCtxFromGin(c)
 	//BindReq里面用泛型进行了处理绑定
-	req, err := types.BindReq[list.PageInfo](c)
+	req, err := types.BindReq[types.ArticleListReq](c)
 	if err != nil {
 		return
 	}
+	if req.UserID == "" {
+		req.UserID = strconv.FormatInt(jwtUtils.GetUserId(c), 10)
+	}
 	zlog.CtxInfof(ctx, "ArticleListByUerID request: %v", req)
-	resp, err := logic.NewArticleLogic().ArticleListByUserID(ctx, req, jwtUtils.GetUserId(c))
+	resp, err := logic.NewArticleLogic().ArticleListByUserID(ctx, req)
 	response.Response(c, resp, err)
 }
 
