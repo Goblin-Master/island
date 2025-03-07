@@ -83,7 +83,7 @@ func IdentifyToken(ctx context.Context, Token string) (TokenData, error) {
 	if claim.Class == global.AUTH_ENUMS_RTOKEN {
 		data.Time = global.RTOKEN_EFFECTIVE_TIME - time.Duration(time.Now().Unix()-claim.RegisteredClaims.NotBefore.Unix())
 	} else {
-		data.Time = global.ATOKEN_EFFECTIVE_TIME
+		data.Time = global.ATOKEN_EFFECTIVE_TIME - time.Duration(time.Now().Unix()-claim.RegisteredClaims.NotBefore.Unix())
 	}
 	return data, nil
 }
