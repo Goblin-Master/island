@@ -5,7 +5,7 @@
 3. Mysql
 4. Redis
 5. zap
-6. viper
+6. eino
 7. ...
 ## 项目目录结构
 ```
