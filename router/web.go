@@ -46,6 +46,7 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.POST("/images", middleware.Authentication, api.UploadImages)
 		rg.DELETE("/images", middleware.Authentication, api.DeleteImages)
 		rg.GET("/images", api.GetImages)
+		rg.GET("/user", middleware.Authentication, api.UserDetail)
 	})
 
 	routeManager.RegisterLoginRoutes(func(rg *gin.RouterGroup) {

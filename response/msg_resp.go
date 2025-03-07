@@ -54,6 +54,7 @@ var (
 	INSUFFICENT_PERMISSIONS    = MsgCode{20403, "权限不足"}
 	FEISHU_OPENID_NOT_EXIST    = MsgCode{20008, "该用户手机号未绑定飞书"}
 	QQ_LOGIN_ERROR             = MsgCode{20009, "QQ登录失败"}
+	GET_USER_ERROR             = MsgCode{20009, "获取用户信息失败"}
 
 	/* 图片错误 30000 ~ 39999 */
 	IMAGE_NOT_EXIST    = MsgCode{30001, "图片不存在"}
