@@ -49,3 +49,11 @@ func migrateTables() {
 	}
 	fmt.Println("数据库迁移成功！")
 }
+
+// Migrate
+//
+//	@Description: 为了部署时，不用进入容器进行数据库表迁移
+func Migrate() {
+	//自动迁移所有表，确保表结构存在
+	migrateTables()
+}
