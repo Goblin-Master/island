@@ -97,4 +97,14 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.POST("/send", api.ChatSendMessage)
 		rg.GET("/get", api.ChatGetMessages)
 	})
+
+	routeManager.RegisterPKRoutes(func(rg *gin.RouterGroup) {
+		rg.POST("/matching", middleware.Authentication, api.PKMatching)
+		rg.GET("/room-info", middleware.Authentication, api.GetRoomInfo)
+		rg.POST("/submit", middleware.Authentication, api.SubmitQuestion)
+	})
+
+	// 两个可以用来测试的用户 Token
+	//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjE4OTc5MTUwMjIyODIwNjc5NjgsImNsYXNzIjoiYXRva2VuIiwiaXNzIjoiaXNsYW5kIiwiZXhwIjo0ODk0OTMzNDk0LCJuYmYiOjE3NDEzMzM0OTR9.LIp8IqQL6pWQw9pEnaDqgn2zE_nsJIioRsMFeRpauag
+	//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjE4OTc5MTU2NDk5NjM4NTU4NzIsImNsYXNzIjoiYXRva2VuIiwiaXNzIjoiaXNsYW5kIiwiZXhwIjo0ODk0OTMzNDk0LCJuYmYiOjE3NDEzMzM0OTR9.MbXuxkngBJ_MmPjMuju7TNlZFIDCfOiziPfScSelDl8
 }

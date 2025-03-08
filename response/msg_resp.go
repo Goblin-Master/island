@@ -32,15 +32,12 @@ var (
 	JSON_UNMARSHAL_ERROR        = MsgCode{60008, "json反序列化失败"}
 
 	/* 参数错误：10000 ~ 19999 */
-	PARAM_NOT_VALID         = MsgCode{10001, "参数无效"}
-	PARAM_IS_BLANK          = MsgCode{10002, "参数为空"}
-	PARAM_TYPE_ERROR        = MsgCode{10003, "参数类型错误"}
-	PARAM_NOT_COMPLETE      = MsgCode{10004, "参数缺失"}
-	MEMBER_NOT_EXIST        = MsgCode{10005, "用户不存在"}
-	MESSAGE_NOT_EXIST       = MsgCode{10006, "消息不存在"}
-	LANGUAGE_NOT_EXIST      = MsgCode{10007, "编程语言不存在"}
-	QUESTION_NOT_EXIST      = MsgCode{10008, "题目不存在"}
-	QUESTION_BANK_NOT_EXIST = MsgCode{10009, "题库不存在"}
+	PARAM_NOT_VALID    = MsgCode{10001, "参数无效"}
+	PARAM_IS_BLANK     = MsgCode{10002, "参数为空"}
+	PARAM_TYPE_ERROR   = MsgCode{10003, "参数类型错误"}
+	PARAM_NOT_COMPLETE = MsgCode{10004, "参数缺失"}
+	MEMBER_NOT_EXIST   = MsgCode{10005, "用户不存在"}
+	MESSAGE_NOT_EXIST  = MsgCode{10006, "消息不存在"}
 
 	/* 用户错误 20000 ~ 29999 */
 	USER_NOT_LOGIN             = MsgCode{20001, "用户未登录"}
@@ -83,6 +80,13 @@ var (
 	ARTICLE_COLLECT_ERROR     = MsgCode{50007, "文章收藏失败"}
 	GET_COLLECT_ARTICLE_ERROR = MsgCode{50008, "获取收藏的文章失败"}
 	GET_DIGG_ARTICLE_ERROR    = MsgCode{50009, "获取点赞的文章失败"}
+
+	/* 题库错误 60000 ~ 69999 */
+	LANGUAGE_NOT_EXIST            = MsgCode{60001, "编程语言不存在"}
+	QUESTION_NOT_EXIST            = MsgCode{60002, "题目不存在"}
+	QUESTION_BANK_NOT_EXIST       = MsgCode{60003, "题库不存在"}
+	QUESTION_COUNT_LESS_THAN_FIVE = MsgCode{60004, "题库数量少于5"}
+
 	/*
 	 USER_ACCOUNT_DISABLE(20005, "账号不可用"),
 	 USER_ACCOUNT_LOCKED(20006, "账号被锁定"),

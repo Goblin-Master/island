@@ -23,6 +23,7 @@ type RouteManager struct {
 	QuestionRoutes *gin.RouterGroup //刷题功能相关的路由组
 	ArticleRouter  *gin.RouterGroup //文章相关的路由组
 	ChatRouter     *gin.RouterGroup //聊天相关的路由组
+	PKRoutes       *gin.RouterGroup //pk相关的路由组
 }
 
 // NewRouteManager 创建一个新的 RouteManager 实例，包含各业务功能的路由组
@@ -35,6 +36,7 @@ func NewRouteManager(router *gin.Engine) *RouteManager {
 		QuestionRoutes: router.Group("/api/question"), //刷题功能相关的路由组
 		ArticleRouter:  router.Group("/api/article"),  //文章相关的路由组
 		ChatRouter:     router.Group("/api/chat"),     //聊天相关的路由组
+		PKRoutes:       router.Group("/api/pk"),       //pk相关的路由组
 	}
 }
 
@@ -73,6 +75,11 @@ func (rm *RouteManager) RegisterChatRoutes(handler PathHandler) {
 	handler(rm.ChatRouter)
 }
 
+// RegisterPKRoutes 注册PK相关的路由处理函数
+func (rm *RouteManager) RegisterPKRoutes(handler PathHandler) {
+	handler(rm.PKRoutes)
+}
+
 // RegisterMiddleware 根据组名为对应的路由组注册中间件
 // group 参数为 "login"、"profile"、"team"或"Common"，分别对应不同的路由组
 func (rm *RouteManager) RegisterMiddleware(group string, middleware Middleware) {
@@ -91,7 +98,10 @@ func (rm *RouteManager) RegisterMiddleware(group string, middleware Middleware) 
 		rm.QuestionRoutes.Use(middleware())
 	case "chat":
 		rm.ChatRouter.Use(middleware())
+	case "pk":
+		rm.CommonRoutes.Use(middleware())
 	}
+
 }
 
 // RequestGlobalMiddleware 注册全局中间件，应用于所有路由
