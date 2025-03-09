@@ -67,7 +67,7 @@ func (r *QuestionRepo) GetQuestionList(questionBankID int64, offset, limit int) 
 		Select("questions.*").
 		Joins("INNER JOIN question_bank_questions ON questions.id = question_bank_questions.question_id").
 		Where("question_bank_questions.question_bank_id = ?", questionBankID).
-		Order("question_bank_questions.created_at DESC"). // 关键调整：按中间表的ID排序
+		Order("question_bank_questions.created_at").
 		Offset(offset).
 		Limit(limit).
 		Find(&questions).Error
@@ -97,7 +97,7 @@ func (r *QuestionRepo) GetQuestionBankList(islandID int64) ([]model.QuestionBank
 		Select("question_banks.*").
 		Joins("INNER JOIN island_question_banks ON question_banks.id = island_question_banks.question_bank_id").
 		Where("island_question_banks.island_id = ?", islandID).
-		Order("island_question_banks.created_at DESC"). // 关键调整：按中间表的ID排序
+		Order("island_question_banks.created_at").
 		Find(&questionBanks).Error
 
 	return questionBanks, err
