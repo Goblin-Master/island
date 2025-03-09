@@ -57,7 +57,7 @@ type LiteQuestionBank struct {
 	QuestionBankID int64  `json:"question_bank_id,string"`
 	Title          string `json:"title"`
 	Description    string `json:"description"`
-	Count          int    `form:"count"`
+	Count          int    `json:"count"`
 }
 
 type GetQuestionBankReq struct {
@@ -67,7 +67,7 @@ type GetQuestionBankReq struct {
 type GetQuestionBankResp struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	Count       int    `form:"count"`
+	Count       int    `json:"count"`
 }
 
 type LiteQuestion struct {
