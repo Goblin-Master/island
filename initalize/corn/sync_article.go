@@ -11,7 +11,7 @@ import (
 func SyncArticle() {
 	// 从缓存获取数据
 	ctx := context.Background()
-	zlog.CtxInfof(ctx, "开始同步文章点赞数")
+	zlog.CtxInfof(ctx, "开始同步文章相关数据")
 	diggMap := articleUtils.GetCacheDiggList(ctx)
 	collectMap := articleUtils.GetCacheCollectList(ctx)
 	var list []model.Article
@@ -46,4 +46,5 @@ func SyncArticle() {
 		articleUtils.SetCacheCollect(ctx, t.ID, collect)
 	}
 	articleUtils.ClearCache(ctx)
+	zlog.CtxInfof(ctx, "同步文章相关数据结束")
 }

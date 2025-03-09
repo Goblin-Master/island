@@ -13,7 +13,7 @@ func Cron() {
 	}
 	crontab := cron.New(cron.WithSeconds(), cron.WithLocation(zone))
 	// 每天2点同步文章数据
-	_, err = crontab.AddFunc("* * 2 * * *", SyncArticle)
+	_, err = crontab.AddFunc("0 0 2 * * *", SyncArticle)
 	if err != nil {
 		logrus.Warn("添加文章内容同步定时任务错误:%v", err)
 	}
