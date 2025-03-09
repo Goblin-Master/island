@@ -46,12 +46,13 @@ func (l *QuestionLogic) CreateQuestion(ctx context.Context, req types.CreateQues
 	// 填入数据
 	id := snowflake.GetIntId(global.Node)
 	question := model.Question{
-		ID:      id,
-		Type:    req.Type,
-		Title:   req.Title,
-		Content: req.Content,
-		Options: string(options),
-		Answer:  string(answers),
+		ID:        id,
+		Type:      req.Type,
+		Title:     req.Title,
+		Content:   req.Content,
+		Options:   string(options),
+		Answer:    string(answers),
+		Difficult: req.Difficult,
 	}
 	// 存入数据库
 	err = repo.NewQuestionRepo(global.DB).CreateQuestion(question)
@@ -218,11 +219,12 @@ func (l *QuestionLogic) GetQuestion(ctx context.Context, req types.GetQuestionRe
 	}
 	// 返回响应
 	resp = types.GetQuestionResp{
-		Type:    question.Type,
-		Title:   question.Title,
-		Content: question.Content,
-		Options: options,
-		Answers: answers,
+		Type:      question.Type,
+		Title:     question.Title,
+		Content:   question.Content,
+		Options:   options,
+		Answers:   answers,
+		Difficult: question.Difficult,
 	}
 	return
 }

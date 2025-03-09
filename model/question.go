@@ -6,12 +6,13 @@ type Question struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	// Type 1.选择题 2.多选题 3.填空题 4.主观题
-	Type    int    `json:"type" gorm:"type:int;not null;default:1;comment:'题目类型'"`
-	ID      int64  `json:"id" gorm:"type:bigint;not null;primary_key;comment:'题目ID'"`
-	Title   string `json:"title" gorm:"type:text;not null;comment:'题目标题'"`
-	Content string `json:"content" gorm:"type:text;not null;comment:'题目内容'"`
-	Options string `json:"options" gorm:"type:text;not null;comment:'选项列表'"`
-	Answer  string `json:"answer" gorm:"type:text;not null;comment:'答案'"`
+	Type      int    `json:"type" gorm:"type:int;not null;default:1;comment:'题目类型'"`
+	ID        int64  `json:"id" gorm:"type:bigint;not null;primary_key;comment:'题目ID'"`
+	Title     string `json:"title" gorm:"type:text;not null;comment:'题目标题'"`
+	Content   string `json:"content" gorm:"type:text;not null;comment:'题目内容'"`
+	Options   string `json:"options" gorm:"type:text;not null;comment:'选项列表'"`
+	Answer    string `json:"answer" gorm:"type:text;not null;comment:'答案'"`
+	Difficult int    `json:"difficult" gorm:"type:int;not null;default:1;comment:'题目难度'"`
 }
 
 func (i *Question) TableName() string {

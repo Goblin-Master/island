@@ -1,11 +1,12 @@
 package types
 
 type CreateQuestionReq struct {
-	Type    int      `json:"type"`
-	Title   string   `json:"title"`
-	Content string   `json:"content"`
-	Options []string `json:"options"`
-	Answers []string `json:"answers"`
+	Type      int      `json:"type"`
+	Title     string   `json:"title"`
+	Content   string   `json:"content"`
+	Options   []string `json:"options"`
+	Answers   []string `json:"answers"`
+	Difficult int      `json:"difficult"`
 	// 可选
 	QuestionBankID string `json:"question_bank_id"`
 }
@@ -46,11 +47,12 @@ type GetQuestionReq struct {
 }
 
 type GetQuestionResp struct {
-	Type    int      `json:"type"`
-	Title   string   `json:"title"`
-	Content string   `json:"content"`
-	Options []string `json:"options"`
-	Answers []string `json:"answers"`
+	Type      int      `json:"type"`
+	Title     string   `json:"title"`
+	Content   string   `json:"content"`
+	Options   []string `json:"options"`
+	Answers   []string `json:"answers"`
+	Difficult int      `json:"difficult"`
 }
 
 type LiteQuestionBank struct {
