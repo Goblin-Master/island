@@ -20,6 +20,7 @@ type CreateQuestionBankReq struct {
 	Description string `json:"description"`
 	// 可选
 	IslandID string `json:"island_id"`
+	LogoUrl  string `json:"logo_url"`
 }
 
 type CreateQuestionBankResp struct {
@@ -60,6 +61,7 @@ type LiteQuestionBank struct {
 	Title          string `json:"title"`
 	Description    string `json:"description"`
 	Count          int    `json:"count"`
+	LogoUrl        string `json:"logo_url"`
 }
 
 type GetQuestionBankReq struct {
@@ -70,6 +72,7 @@ type GetQuestionBankResp struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Count       int    `json:"count"`
+	LogoUrl     string `json:"logo_url"`
 }
 
 type LiteQuestion struct {

@@ -97,7 +97,7 @@ func (r *QuestionRepo) GetQuestionBankList(islandID int64) ([]model.QuestionBank
 		Select("question_banks.*").
 		Joins("INNER JOIN island_question_banks ON question_banks.id = island_question_banks.question_bank_id").
 		Where("island_question_banks.island_id = ?", islandID).
-		Order("island_question_banks.created_at").
+		Order("island_question_banks.created_at DESC").
 		Find(&questionBanks).Error
 
 	return questionBanks, err
