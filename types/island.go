@@ -1,5 +1,7 @@
 package types
 
+import "time"
+
 type IslandReq struct {
 	UserID int64   `json:"-"`
 	ID     string  `json:"id"` // 岛屿id
@@ -46,4 +48,15 @@ type IslandDeleteReq struct {
 
 type IslandDetailReq struct {
 	ID string `form:"id"`
+}
+type IslandDetailResp struct {
+	ID         int64     `json:"id,string"`
+	Name       string    `json:"name"`
+	Width      float64   `json:"width"`
+	Height     float64   `json:"height"`
+	XPoint     float64   `json:"xPoint"`
+	YPoint     float64   `json:"yPoint"`
+	Path       string    `json:"path"`
+	UserID     int64     `json:"user_id,string"`
+	CreateTime time.Time `json:"create_time"`
 }
