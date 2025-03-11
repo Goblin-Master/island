@@ -96,6 +96,7 @@ func (l *QuestionLogic) CreateQuestionBank(ctx context.Context, req types.Create
 		ID:          id,
 		Title:       req.Title,
 		Description: req.Description,
+		LogoUrl:     req.LogoUrl,
 	}
 	// 存入数据库
 	err = repo.NewQuestionRepo(global.DB).CreateQuestionBank(questionBank)
@@ -276,7 +277,6 @@ func (l *QuestionLogic) GetQuestionList(ctx context.Context, req types.GetQuesti
 		zlog.CtxErrorf(ctx, "获取题库 %d 题目列表失败: %v", questionBankID, err)
 		return resp, response.ErrResp(err, response.DATABASE_ERROR)
 	}
-	fmt.Println(list)
 	// 赋值
 	resp.Length = 0
 	resp.Questions = make([]types.LiteQuestion, 0)

@@ -25,6 +25,7 @@ type QuestionBank struct {
 	ID          int64  `json:"id" gorm:"type:bigint;not null;primary_key;uniqueIndex;comment:'题库ID'"`
 	Title       string `json:"title" gorm:"type:text;not null;comment:'题库名称'"`
 	Description string `json:"description" gorm:"type:text;not null;comment:'题库描述'"`
+	LogoUrl     string `json:"logo_url" gorm:"type:text;not null;comment:'题库logo'"`
 }
 
 func (i *QuestionBank) TableName() string {
