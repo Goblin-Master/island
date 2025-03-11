@@ -2,6 +2,7 @@ package repo
 
 import (
 	"gorm.io/gorm"
+	"tgwp/global"
 	"tgwp/model"
 )
 
@@ -54,5 +55,10 @@ func (r *IslandRepo) DeleteIsland(id, user_id int64) (err error) {
 		return
 	}
 	err = r.DB.Delete(&island).Error
+	return
+}
+
+func (r *IslandRepo) GetIsland(island_id int64) (resp model.Island, err error) {
+	err = global.DB.Where("id = ?", island_id).Take(&resp).Error
 	return
 }

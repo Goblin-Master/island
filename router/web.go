@@ -59,6 +59,7 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.POST("/", middleware.Authentication, api.CreateIsland)   //创建岛屿
 		rg.PUT("/", middleware.Authentication, api.ModifyIsland)    //修改岛屿
 		rg.DELETE("/", middleware.Authentication, api.DeleteIsland) //删除岛屿
+		rg.GET("/detail", api.IslandDetail)                         //岛屿详情
 	})
 
 	routeManager.RegisterAiRoutes(func(rg *gin.RouterGroup) {

@@ -43,3 +43,7 @@ type IslandDeleteReq struct {
 	UserID int64  `json:"-"`
 	ID     string `form:"id"`
 }
+
+type IslandDetailReq struct {
+	ID string `form:"id"`
+}

@@ -56,3 +56,14 @@ func DeleteIsland(c *gin.Context) {
 	err = logic.NewIslandLogic().DeleteIsland(ctx, req)
 	response.Response(c, nil, err)
 }
+
+func IslandDetail(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	req, err := types.BindReq[types.IslandDetailReq](c)
+	if err != nil {
+		return
+	}
+	zlog.CtxInfof(ctx, "IslandDetail request: %v", req)
+	resp, err := logic.NewIslandLogic().IslandDetail(ctx, req)
+	response.Response(c, resp, err)
+}

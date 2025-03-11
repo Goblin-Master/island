@@ -134,3 +134,18 @@ func (l *IslandLogic) DeleteIsland(ctx context.Context, req types.IslandDeleteRe
 	}
 	return
 }
+
+func (l *IslandLogic) IslandDetail(ctx context.Context, req types.IslandDetailReq) (resp model.Island, err error) {
+	defer utils.RecordTime(time.Now())()
+	island_id, e := strconv.ParseInt(req.ID, 10, 64)
+	if e != nil {
+		zlog.CtxErrorf(ctx, "类型转换:%v", err)
+		return model.Island{}, response.ErrResp(err, response.COMMON_FAIL)
+	}
+	resp, err = repo.NewIslandRepo(global.DB).GetIsland(island_id)
+	if err != nil {
+		zlog.CtxInfof(ctx, "获取岛屿详情失败:%v", err)
+		return model.Island{}, response.ErrResp(err, response.ISLAND_GET_ERROR)
+	}
+	return
+}
