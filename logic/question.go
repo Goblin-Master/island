@@ -254,6 +254,7 @@ func (l *QuestionLogic) GetQuestionBank(ctx context.Context, req types.GetQuesti
 		Title:       question.Title,
 		Description: question.Description,
 		Count:       count,
+		LogoUrl:     question.LogoUrl,
 	}
 	return
 }
@@ -325,6 +326,7 @@ func (l *QuestionLogic) GetQuestionBankList(ctx context.Context, req types.GetQu
 			Title:          item.Title,
 			Description:    item.Description,
 			Count:          count,
+			LogoUrl:        item.LogoUrl,
 		}
 		resp.QuestionBanks = append(resp.QuestionBanks, questionBank)
 		resp.Length++
