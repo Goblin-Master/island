@@ -320,7 +320,7 @@ func (l *PKLogic) SubmitQuestion(ctx context.Context, req types.SubmitQuestionRe
 	}
 	// 转 json 字符串并存入 redis
 	newRedisRoomInfoJSON, _ := json.Marshal(redisRoomInfo)
-	err = global.Rdb.Set(ctx, fmt.Sprintf(REDIS_ROOM_INFO, roomID), newRedisRoomInfoJSON, 5*time.Minute*999).Err()
+	err = global.Rdb.Set(ctx, fmt.Sprintf(REDIS_ROOM_INFO, roomID), newRedisRoomInfoJSON, 5*time.Minute).Err()
 	if err != nil {
 		zlog.CtxErrorf(ctx, "redis 设置房间信息错误: %v", err)
 		return resp, response.ErrResp(err, response.REDIS_ERROR)
@@ -375,7 +375,7 @@ func InitRoom(roomID int64, questionBankID int64, user1ID int64, user2ID int64) 
 		User1FinalSubmitTimestamp: nowTimestamp,
 		User2FinalSubmitTimestamp: nowTimestamp,
 		StartTimestamp:            nowTimestamp,
-		EndTimestamp:              nowTimestamp + 5*60*1000*999,
+		EndTimestamp:              nowTimestamp + 2*60*1000,
 		WinnerID:                  0,
 	}
 	for _, item := range questions {
@@ -392,7 +392,7 @@ func InitRoom(roomID int64, questionBankID int64, user1ID int64, user2ID int64) 
 	// 转 json 字符串并存入 redis
 	redisRoomInfoJSON, _ := json.Marshal(redisRoomInfo)
 	zlog.CtxDebugf(context.Background(), "房间信息: %s", redisRoomInfoJSON)
-	err = global.Rdb.Set(context.Background(), fmt.Sprintf(REDIS_ROOM_INFO, roomID), redisRoomInfoJSON, 5*time.Minute*999).Err()
+	err = global.Rdb.Set(context.Background(), fmt.Sprintf(REDIS_ROOM_INFO, roomID), redisRoomInfoJSON, 5*time.Minute).Err()
 	if err != nil {
 		zlog.Errorf("redis 设置房间信息错误: %v", err)
 		return
