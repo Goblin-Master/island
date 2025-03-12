@@ -46,3 +46,7 @@ func (r *UserRepo) FocusUser(userID int64, focusID int64) (resp string, err erro
 		return "取消关注成功", nil
 	}
 }
+func (r *UserRepo) FocusIDList(user_id int64) (resp []int64, err error) {
+	err = r.DB.Model(&model.Focus{}).Where("user_id = ?", user_id).Pluck("focus_id", &resp).Error
+	return
+}

@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"strconv"
 	"tgwp/log/zlog"
 	"tgwp/logic"
 	"tgwp/response"
@@ -29,5 +30,19 @@ func FocusUser(c *gin.Context) {
 	req.UserID = jwtUtils.GetUserId(c)
 	zlog.CtxInfof(ctx, "FocusUser request: %v", req)
 	resp, err := logic.NewUserLogic().FocusUser(ctx, req)
+	response.Response(c, resp, err)
+}
+
+func FocusList(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	req, err := types.BindReq[types.FocusListReq](c)
+	if err != nil {
+		return
+	}
+	if req.UserID == "" {
+		req.UserID = strconv.FormatInt(jwtUtils.GetUserId(c), 10)
+	}
+	zlog.CtxInfof(ctx, "FocusList request: %v", req)
+	resp, err := logic.NewUserLogic().FocusList(ctx, req)
 	response.Response(c, resp, err)
 }
