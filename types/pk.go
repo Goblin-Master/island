@@ -6,6 +6,8 @@ type QuestionsInfo struct {
 	User2Submit bool  `json:"user2_submit"`
 	User1Score  int64 `json:"user1_score"`
 	User2Score  int64 `json:"user2_score"`
+	YourSubmit  bool  `json:"your_submit"`
+	YourScore   int64 `json:"your_score"`
 }
 
 type RedisRoomInfo struct {
@@ -34,6 +36,7 @@ type PKMatchingResp struct {
 }
 
 type GetRoomInfoReq struct {
+	UserID int64  `form:"-"`
 	RoomID string `form:"room_id"`
 }
 

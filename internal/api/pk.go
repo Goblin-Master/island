@@ -27,6 +27,7 @@ func GetRoomInfo(c *gin.Context) {
 	if err != nil {
 		return
 	}
+	req.UserID = jwtUtils.GetUserId(c)
 	zlog.CtxInfof(ctx, "PKMatching request: %v", req)
 	resp, err := logic.NewPKLogic().GetRoomInfo(ctx, req)
 	response.Response(c, resp, err)

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-redis/redis/v8"
+	"sort"
 	"strconv"
 	"tgwp/global"
 	"tgwp/log/zlog"
@@ -126,12 +127,20 @@ func (l *PKLogic) GetRoomInfo(ctx context.Context, req types.GetRoomInfoReq) (re
 	allSubmit := true
 	redisRoomInfo.User1ScoreTotal = 0
 	redisRoomInfo.User2ScoreTotal = 0
-	for _, item := range redisRoomInfo.Questions {
+	for i, item := range redisRoomInfo.Questions {
 		if !item.User1Submit || !item.User2Submit {
 			allSubmit = false
 		}
 		redisRoomInfo.User1ScoreTotal += item.User1Score
 		redisRoomInfo.User2ScoreTotal += item.User2Score
+		// 处理发生请求用户的分数
+		if req.UserID == redisRoomInfo.User1ID {
+			redisRoomInfo.Questions[i].YourSubmit = item.User1Submit
+			redisRoomInfo.Questions[i].YourScore = item.User1Score
+		} else {
+			redisRoomInfo.Questions[i].YourSubmit = item.User2Submit
+			redisRoomInfo.Questions[i].YourScore = item.User2Score
+		}
 	}
 	// 判断是否已结束游戏(时间结束或双方均已全部交卷)
 	if time.Now().UnixMilli() > redisRoomInfo.EndTimestamp || allSubmit {
@@ -255,11 +264,23 @@ func (l *PKLogic) SubmitQuestion(ctx context.Context, req types.SubmitQuestionRe
 	} else if question.Type == global.QUESTION_TYPE_MULTIPLE {
 		// 多选题
 		allRight := true
-		for i := 0; i < len(answer); i++ {
-			if req.Answer[i] != answer[i] {
-				allRight = false
+		if len(req.Answer) != len(answer) {
+			allRight = false
+		} else {
+			zlog.Debugf("刚开始: req.Answer: %v, answer: %v", req.Answer, answer)
+			// 对两个答案切片进行排序
+			sort.Strings(req.Answer)
+			sort.Strings(answer)
+			zlog.Debugf("排序后: req.Answer: %v, answer: %v", req.Answer, answer)
+			for i := 0; i < len(answer); i++ {
+				if req.Answer[i] != answer[i] {
+					allRight = false
+					break
+				}
 			}
 		}
+		// 两个答案都进行排序
+
 		if allRight {
 			score = 100
 		}
@@ -277,10 +298,18 @@ func (l *PKLogic) SubmitQuestion(ctx context.Context, req types.SubmitQuestionRe
 		redisRoomInfo.Questions[questionIndex].User1Submit = true
 		redisRoomInfo.Questions[questionIndex].User1Score = score
 		redisRoomInfo.User1FinalSubmitTimestamp = time.Now().UnixMilli()
+		if req.UserID == redisRoomInfo.User1ID {
+			redisRoomInfo.Questions[questionIndex].YourSubmit = true
+			redisRoomInfo.Questions[questionIndex].YourScore = score
+		}
 	} else {
 		redisRoomInfo.Questions[questionIndex].User2Score = score
 		redisRoomInfo.Questions[questionIndex].User2Submit = true
 		redisRoomInfo.User2FinalSubmitTimestamp = time.Now().UnixMilli()
+		if req.UserID == redisRoomInfo.User2ID {
+			redisRoomInfo.Questions[questionIndex].YourSubmit = true
+			redisRoomInfo.Questions[questionIndex].YourScore = score
+		}
 	}
 	// 重新计算总分
 	redisRoomInfo.User1ScoreTotal = 0
@@ -291,7 +320,7 @@ func (l *PKLogic) SubmitQuestion(ctx context.Context, req types.SubmitQuestionRe
 	}
 	// 转 json 字符串并存入 redis
 	newRedisRoomInfoJSON, _ := json.Marshal(redisRoomInfo)
-	err = global.Rdb.Set(ctx, fmt.Sprintf(REDIS_ROOM_INFO, roomID), newRedisRoomInfoJSON, 5*time.Minute).Err()
+	err = global.Rdb.Set(ctx, fmt.Sprintf(REDIS_ROOM_INFO, roomID), newRedisRoomInfoJSON, 5*time.Minute*999).Err()
 	if err != nil {
 		zlog.CtxErrorf(ctx, "redis 设置房间信息错误: %v", err)
 		return resp, response.ErrResp(err, response.REDIS_ERROR)
@@ -346,7 +375,7 @@ func InitRoom(roomID int64, questionBankID int64, user1ID int64, user2ID int64) 
 		User1FinalSubmitTimestamp: nowTimestamp,
 		User2FinalSubmitTimestamp: nowTimestamp,
 		StartTimestamp:            nowTimestamp,
-		EndTimestamp:              nowTimestamp + 2*60*1000,
+		EndTimestamp:              nowTimestamp + 5*60*1000*999,
 		WinnerID:                  0,
 	}
 	for _, item := range questions {
@@ -356,12 +385,14 @@ func InitRoom(roomID int64, questionBankID int64, user1ID int64, user2ID int64) 
 			User2Submit: false,
 			User1Score:  0,
 			User2Score:  0,
+			YourSubmit:  false,
+			YourScore:   0,
 		})
 	}
 	// 转 json 字符串并存入 redis
 	redisRoomInfoJSON, _ := json.Marshal(redisRoomInfo)
 	zlog.CtxDebugf(context.Background(), "房间信息: %s", redisRoomInfoJSON)
-	err = global.Rdb.Set(context.Background(), fmt.Sprintf(REDIS_ROOM_INFO, roomID), redisRoomInfoJSON, 5*time.Minute).Err()
+	err = global.Rdb.Set(context.Background(), fmt.Sprintf(REDIS_ROOM_INFO, roomID), redisRoomInfoJSON, 5*time.Minute*999).Err()
 	if err != nil {
 		zlog.Errorf("redis 设置房间信息错误: %v", err)
 		return
