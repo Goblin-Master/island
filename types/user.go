@@ -8,3 +8,7 @@ type UserDetailResp struct {
 	Avatar    string `json:"avatar"`
 	CreatedAt string `json:"created_at"`
 }
+type FocusUserReq struct {
+	UserID  int64  `form:"user_id"`
+	FocusID string `form:"focus_id"`
+}

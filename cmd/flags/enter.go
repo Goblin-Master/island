@@ -43,6 +43,7 @@ func migrateTables() {
 		&model.QuestionBank{},
 		&model.QuestionBankQuestion{},
 		&model.IslandQuestionBank{},
+		&model.Focus{},
 	)
 	if err != nil {
 		fmt.Println("数据库迁移失败！")

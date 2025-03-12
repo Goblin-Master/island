@@ -52,6 +52,10 @@ var (
 	FEISHU_OPENID_NOT_EXIST    = MsgCode{20008, "该用户手机号未绑定飞书"}
 	QQ_LOGIN_ERROR             = MsgCode{20009, "QQ登录失败"}
 	GET_USER_ERROR             = MsgCode{20009, "获取用户信息失败"}
+	USER_NOT_EXIST             = MsgCode{20010, "用户不存在"}
+	USER_FOCUS_ERROR           = MsgCode{20011, "关注用户失败"}
+	USER_FOCUS_SELF            = MsgCode{20012, "你时刻都在关注自己"}
+	USER_CANCEL_FOCUS          = MsgCode{20013, "取消关注失败"}
 
 	/* 图片错误 30000 ~ 39999 */
 	IMAGE_NOT_EXIST    = MsgCode{30001, "图片不存在"}

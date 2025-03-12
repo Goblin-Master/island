@@ -32,3 +32,26 @@ func (l *UserLogic) UserDetail(ctx context.Context, req types.UserDetailReq) (re
 	}
 	return
 }
+
+func (l *UserLogic) FocusUser(ctx context.Context, req types.FocusUserReq) (resp string, err error) {
+	defer utils.RecordTime(time.Now())()
+	focus_id, err := strconv.ParseInt(req.FocusID, 10, 64)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "类型转换:%v", err)
+		return "", response.ErrResp(err, response.COMMON_FAIL)
+	}
+	if focus_id == req.UserID {
+		return "", response.ErrResp(err, response.USER_FOCUS_SELF)
+	}
+	r := repo.NewUserRepo(global.DB)
+	err = r.IsExist(focus_id)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "用户不存在:%v", err)
+		return "", response.ErrResp(err, response.USER_NOT_EXIST)
+	}
+	resp, err = r.FocusUser(req.UserID, focus_id)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "用户关注相关操作失败:%v", err)
+	}
+	return
+}

@@ -16,53 +16,55 @@ type Middleware func() gin.HandlerFunc
 
 // RouteManager 管理不同的路由组，按业务功能分组
 type RouteManager struct {
-	LoginRoutes    *gin.RouterGroup // 登录相关的路由组
-	CommonRoutes   *gin.RouterGroup //通用功能相关的路由组
-	IslandRoutes   *gin.RouterGroup //岛屿相关的路由组
-	AiRoutes       *gin.RouterGroup //ai相关的路由组
-	QuestionRoutes *gin.RouterGroup //刷题功能相关的路由组
+	LoginRouter    *gin.RouterGroup // 登录相关的路由组
+	CommonRouter   *gin.RouterGroup //通用功能相关的路由组
+	IslandRouter   *gin.RouterGroup //岛屿相关的路由组
+	AiRouter       *gin.RouterGroup //ai相关的路由组
+	QuestionRouter *gin.RouterGroup //刷题功能相关的路由组
 	ArticleRouter  *gin.RouterGroup //文章相关的路由组
 	ChatRouter     *gin.RouterGroup //聊天相关的路由组
-	PKRoutes       *gin.RouterGroup //pk相关的路由组
+	PKRouter       *gin.RouterGroup //pk相关的路由组
+	UserRouter     *gin.RouterGroup //用户相关的路由组
 }
 
 // NewRouteManager 创建一个新的 RouteManager 实例，包含各业务功能的路由组
 func NewRouteManager(router *gin.Engine) *RouteManager {
 	return &RouteManager{
-		LoginRoutes:    router.Group("/api/login"),    // 初始化登录路由组
-		CommonRoutes:   router.Group("/api/common"),   //通用功能相关的路由组
-		IslandRoutes:   router.Group("/api/island"),   //岛屿相关的路由组
-		AiRoutes:       router.Group("/api/ai"),       //ai相关的路由组
-		QuestionRoutes: router.Group("/api/question"), //刷题功能相关的路由组
+		LoginRouter:    router.Group("/api/login"),    // 初始化登录路由组
+		CommonRouter:   router.Group("/api/common"),   //通用功能相关的路由组
+		IslandRouter:   router.Group("/api/island"),   //岛屿相关的路由组
+		AiRouter:       router.Group("/api/ai"),       //ai相关的路由组
+		QuestionRouter: router.Group("/api/question"), //刷题功能相关的路由组
 		ArticleRouter:  router.Group("/api/article"),  //文章相关的路由组
 		ChatRouter:     router.Group("/api/chat"),     //聊天相关的路由组
-		PKRoutes:       router.Group("/api/pk"),       //pk相关的路由组
+		PKRouter:       router.Group("/api/pk"),       //pk相关的路由组
+		UserRouter:     router.Group("/api/user"),     //用户相关的路由组
 	}
 }
 
 // RegisterLoginRoutes 注册登录相关的路由处理函数
 func (rm *RouteManager) RegisterLoginRoutes(handler PathHandler) {
-	handler(rm.LoginRoutes)
+	handler(rm.LoginRouter)
 }
 
 // RegisterCommonRoutes通用功能相关的路由组
 func (rm *RouteManager) RegisterCommonRoutes(handler PathHandler) {
-	handler(rm.CommonRoutes)
+	handler(rm.CommonRouter)
 }
 
 // RegisterIslandRoutes 注册岛屿相关的路由处理函数
 func (rm *RouteManager) RegisterIslandRoutes(handler PathHandler) {
-	handler(rm.IslandRoutes)
+	handler(rm.IslandRouter)
 }
 
 // RegisterAiRoutes 注册ai相关的路由处理函数
 func (rm *RouteManager) RegisterAiRoutes(handler PathHandler) {
-	handler(rm.AiRoutes)
+	handler(rm.AiRouter)
 }
 
 // RegisterQuestionRoutes 注册刷题功能相关的路由处理函数
 func (rm *RouteManager) RegisterQuestionRoutes(handler PathHandler) {
-	handler(rm.QuestionRoutes)
+	handler(rm.QuestionRouter)
 }
 
 // RegisterArticleRoutes 注册文章相关的路由处理函数
@@ -77,7 +79,12 @@ func (rm *RouteManager) RegisterChatRoutes(handler PathHandler) {
 
 // RegisterPKRoutes 注册PK相关的路由处理函数
 func (rm *RouteManager) RegisterPKRoutes(handler PathHandler) {
-	handler(rm.PKRoutes)
+	handler(rm.PKRouter)
+}
+
+// RegisterUserRoutes 用户相关的路由处理函数
+func (rm *RouteManager) RegisterUserRoutes(handler PathHandler) {
+	handler(rm.UserRouter)
 }
 
 // RegisterMiddleware 根据组名为对应的路由组注册中间件
@@ -85,21 +92,23 @@ func (rm *RouteManager) RegisterPKRoutes(handler PathHandler) {
 func (rm *RouteManager) RegisterMiddleware(group string, middleware Middleware) {
 	switch group {
 	case "login":
-		rm.LoginRoutes.Use(middleware())
+		rm.LoginRouter.Use(middleware())
 	case "common":
-		rm.CommonRoutes.Use(middleware())
+		rm.CommonRouter.Use(middleware())
 	case "island":
-		rm.IslandRoutes.Use(middleware())
+		rm.IslandRouter.Use(middleware())
 	case "ai":
-		rm.AiRoutes.Use(middleware())
+		rm.AiRouter.Use(middleware())
 	case "article":
 		rm.ArticleRouter.Use(middleware())
 	case "question":
-		rm.QuestionRoutes.Use(middleware())
+		rm.QuestionRouter.Use(middleware())
 	case "chat":
 		rm.ChatRouter.Use(middleware())
 	case "pk":
-		rm.CommonRoutes.Use(middleware())
+		rm.CommonRouter.Use(middleware())
+	case "user":
+		rm.UserRouter.Use(middleware())
 	}
 
 }

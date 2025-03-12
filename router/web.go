@@ -46,7 +46,6 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.POST("/images", middleware.Authentication, api.UploadImages)
 		rg.DELETE("/images", middleware.Authentication, api.DeleteImages)
 		rg.GET("/images", api.GetImages)
-		rg.GET("/user", middleware.Authentication, api.UserDetail)
 	})
 
 	routeManager.RegisterLoginRoutes(func(rg *gin.RouterGroup) {
@@ -103,6 +102,11 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.POST("/matching", middleware.Authentication, api.PKMatching)
 		rg.GET("/room-info", middleware.Authentication, api.GetRoomInfo)
 		rg.POST("/submit", middleware.Authentication, api.SubmitQuestion)
+	})
+
+	routeManager.RegisterUserRoutes(func(rg *gin.RouterGroup) {
+		rg.GET("/detail", middleware.Authentication, api.UserDetail)
+		rg.GET("/focus", middleware.Authentication, api.FocusUser)
 	})
 
 	// 两个可以用来测试的用户 Token
