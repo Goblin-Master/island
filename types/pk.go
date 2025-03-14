@@ -63,3 +63,21 @@ type SubmitQuestionReq struct {
 type SubmitQuestionResp struct {
 	Score int64 `json:"score"`
 }
+
+type PKSetRuleReq struct {
+	QuestionBankID string `json:"question_bank_id"`
+	QuestionCount  int    `json:"question_count"`
+	Duration       int    `json:"duration"`
+}
+
+type PKSetRuleResp struct {
+}
+
+type PKGetRuleReq struct {
+	QuestionBankID string `form:"question_bank_id"`
+}
+
+type PKGetRuleResp struct {
+	QuestionCount int `json:"question_count"`
+	Duration      int `json:"duration"`
+}

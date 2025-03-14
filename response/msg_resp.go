@@ -86,10 +86,10 @@ var (
 	GET_DIGG_ARTICLE_ERROR    = MsgCode{50009, "获取点赞的文章失败"}
 
 	/* 题库错误 60000 ~ 69999 */
-	LANGUAGE_NOT_EXIST            = MsgCode{60001, "编程语言不存在"}
-	QUESTION_NOT_EXIST            = MsgCode{60002, "题目不存在"}
-	QUESTION_BANK_NOT_EXIST       = MsgCode{60003, "题库不存在"}
-	QUESTION_COUNT_LESS_THAN_FIVE = MsgCode{60004, "题库数量少于5"}
+	LANGUAGE_NOT_EXIST        = MsgCode{60001, "编程语言不存在"}
+	QUESTION_NOT_EXIST        = MsgCode{60002, "题目不存在"}
+	QUESTION_BANK_NOT_EXIST   = MsgCode{60003, "题库不存在"}
+	QUESTION_COUNT_NOT_ENOUGH = MsgCode{60004, "题库数量不足"}
 
 	/*
 	 USER_ACCOUNT_DISABLE(20005, "账号不可用"),

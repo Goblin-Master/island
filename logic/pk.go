@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"tgwp/global"
 	"tgwp/log/zlog"
+	"tgwp/model"
 	"tgwp/repo"
 	"tgwp/response"
 	"tgwp/types"
@@ -31,6 +32,54 @@ const (
 	REDIS_ROOM_INFO       = "pk:room:%d:info"
 )
 
+// PKSetRule 设置 PK 规则
+func (l *PKLogic) PKSetRule(ctx context.Context, req types.PKSetRuleReq) (resp types.PKSetRuleResp, err error) {
+	defer utils.RecordTime(time.Now())()
+	// 转 int64
+	questionBankID, err := strconv.ParseInt(req.QuestionBankID, 10, 64)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "%v 转换 int64 错误: %v", questionBankID, err)
+		zlog.CtxErrorf(ctx, "%v 转换 int64 错误: %v", questionBankID, err)
+		return resp, response.ErrResp(err, response.PARAM_NOT_VALID)
+	}
+	// 判断题目数量是否合法
+	var cnt int
+	cnt, err = repo.NewQuestionRepo(global.DB).GetQuestionBankQuestionCount(questionBankID)
+	if req.QuestionCount > cnt {
+		zlog.CtxErrorf(ctx, "题库 %d 题目数量少于 %d", questionBankID, req.QuestionCount)
+		return resp, response.ErrResp(err, response.QUESTION_COUNT_NOT_ENOUGH)
+	}
+	// 修改数据库规则
+	err = repo.NewQuestionRepo(global.DB).PKSetRule(questionBankID, req.QuestionCount, req.Duration)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "修改数据库规则错误: %v", err)
+		return resp, response.ErrResp(err, response.DATABASE_ERROR)
+	}
+	return resp, nil
+}
+
+// PKGetRule 获取 PK 规则
+func (l *PKLogic) PKGetRule(ctx context.Context, req types.PKGetRuleReq) (resp types.PKGetRuleResp, err error) {
+	defer utils.RecordTime(time.Now())()
+	// 转 int64
+	questionBankID, err := strconv.ParseInt(req.QuestionBankID, 10, 64)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "%v 转换 int64 错误: %v", questionBankID, err)
+		return resp, response.ErrResp(err, response.PARAM_NOT_VALID)
+	}
+	// 获取规则
+	var rule model.QuestionBankPKRule
+	rule, err = repo.NewQuestionRepo(global.DB).PKGetRule(questionBankID)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "获取题库 %d PK 规则错误: %v", questionBankID, err)
+		return resp, response.ErrResp(err, response.DATABASE_ERROR)
+	}
+	// 转换为返回结构
+	resp.QuestionCount = rule.QuestionCount
+	resp.Duration = rule.Duration
+	return resp, nil
+}
+
 func (l *PKLogic) PKMatching(ctx context.Context, req types.PKMatchingReq) (resp types.PKMatchingResp, err error) {
 	defer utils.RecordTime(time.Now())()
 	// 转 int64
@@ -39,12 +88,26 @@ func (l *PKLogic) PKMatching(ctx context.Context, req types.PKMatchingReq) (resp
 		zlog.CtxErrorf(ctx, "%v 转换 int64 错误: %v", questionBankID, err)
 		return resp, response.ErrResp(err, response.PARAM_NOT_VALID)
 	}
-	// 题库至少要有 5 道题目
+	// 如果规则不存在，说明此题库不支持 PK
+	if !repo.NewQuestionRepo(global.DB).CheckPKRuleExist(questionBankID) {
+		zlog.CtxErrorf(ctx, "题库 %d 未设置 PK 规则", questionBankID)
+	}
+	// 题库中题目数量至少要大于规则要求的数量
 	var cnt int
 	cnt, err = repo.NewQuestionRepo(global.DB).GetQuestionBankQuestionCount(questionBankID)
-	if cnt < 5 {
-		zlog.CtxErrorf(ctx, "题库 %d 题目数量少于 5", questionBankID)
-		return resp, response.ErrResp(err, response.QUESTION_COUNT_LESS_THAN_FIVE)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "获取题库 %d 题目数量错误: %v", questionBankID, err)
+		return resp, response.ErrResp(err, response.DATABASE_ERROR)
+	}
+	var rule model.QuestionBankPKRule
+	rule, err = repo.NewQuestionRepo(global.DB).PKGetRule(questionBankID)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "获取题库 %d PK 规则错误: %v", questionBankID, err)
+		return resp, response.ErrResp(err, response.DATABASE_ERROR)
+	}
+	if cnt < rule.QuestionCount {
+		zlog.CtxErrorf(ctx, "题库 %d 题目数量不足", questionBankID)
+		return resp, response.ErrResp(err, response.QUESTION_COUNT_NOT_ENOUGH)
 	}
 	// 判断等待队列是否已经有人
 	var val string
@@ -78,7 +141,7 @@ func (l *PKLogic) PKMatching(ctx context.Context, req types.PKMatchingReq) (resp
 			return resp, nil
 		}
 		// 匹配成功，处理房间逻辑
-		InitRoom(id, questionBankID, req.UserID, user2ID)
+		InitRoom(id, questionBankID, req.UserID, user2ID, rule)
 	} else if err == nil {
 		// 队列中有人，直接匹配成功，向对方发送订阅信息
 		err = global.Rdb.Publish(ctx, fmt.Sprintf(REDIS_PK_WAITING_SUB, questionBankID), req.UserID).Err()
@@ -318,9 +381,12 @@ func (l *PKLogic) SubmitQuestion(ctx context.Context, req types.SubmitQuestionRe
 		redisRoomInfo.User1ScoreTotal += item.User1Score
 		redisRoomInfo.User2ScoreTotal += item.User2Score
 	}
+	// 计算缓存时间
+	cacheTime := time.Duration((redisRoomInfo.EndTimestamp-time.Now().UnixMilli())/1000)*time.Second + 5*time.Minute
+	zlog.Debugf("房间 %d 缓存时间: %v", roomID, cacheTime)
 	// 转 json 字符串并存入 redis
 	newRedisRoomInfoJSON, _ := json.Marshal(redisRoomInfo)
-	err = global.Rdb.Set(ctx, fmt.Sprintf(REDIS_ROOM_INFO, roomID), newRedisRoomInfoJSON, 5*time.Minute).Err()
+	err = global.Rdb.Set(ctx, fmt.Sprintf(REDIS_ROOM_INFO, roomID), newRedisRoomInfoJSON, cacheTime).Err()
 	if err != nil {
 		zlog.CtxErrorf(ctx, "redis 设置房间信息错误: %v", err)
 		return resp, response.ErrResp(err, response.REDIS_ERROR)
@@ -354,11 +420,11 @@ func WaitPKMatching(ctx context.Context, questionBankID int64) (code int, user2I
 }
 
 // InitRoom 初始化房间
-func InitRoom(roomID int64, questionBankID int64, user1ID int64, user2ID int64) {
+func InitRoom(roomID int64, questionBankID int64, user1ID int64, user2ID int64, rule model.QuestionBankPKRule) {
 	// 搭建房间信息
 	zlog.Debugf("房间 %d 开始搭建中，选手为: %d 与 %d", roomID, user1ID, user2ID)
-	// 随机选取 5 道题目
-	questions, err := repo.NewQuestionRepo(global.DB).GetRandomQuestions(questionBankID, 5)
+	// 随机选取题目
+	questions, err := repo.NewQuestionRepo(global.DB).GetRandomQuestions(questionBankID, rule.QuestionCount)
 	if err != nil {
 		zlog.Errorf("获取题目错误: %v", err)
 		return
@@ -375,7 +441,7 @@ func InitRoom(roomID int64, questionBankID int64, user1ID int64, user2ID int64) 
 		User1FinalSubmitTimestamp: nowTimestamp,
 		User2FinalSubmitTimestamp: nowTimestamp,
 		StartTimestamp:            nowTimestamp,
-		EndTimestamp:              nowTimestamp + 2*60*1000,
+		EndTimestamp:              nowTimestamp + int64(rule.Duration)*1000,
 		WinnerID:                  0,
 	}
 	for _, item := range questions {
@@ -392,7 +458,7 @@ func InitRoom(roomID int64, questionBankID int64, user1ID int64, user2ID int64) 
 	// 转 json 字符串并存入 redis
 	redisRoomInfoJSON, _ := json.Marshal(redisRoomInfo)
 	zlog.CtxDebugf(context.Background(), "房间信息: %s", redisRoomInfoJSON)
-	err = global.Rdb.Set(context.Background(), fmt.Sprintf(REDIS_ROOM_INFO, roomID), redisRoomInfoJSON, 5*time.Minute).Err()
+	err = global.Rdb.Set(context.Background(), fmt.Sprintf(REDIS_ROOM_INFO, roomID), redisRoomInfoJSON, time.Duration(rule.Duration)*time.Second+5*time.Minute).Err()
 	if err != nil {
 		zlog.Errorf("redis 设置房间信息错误: %v", err)
 		return

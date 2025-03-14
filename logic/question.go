@@ -249,12 +249,15 @@ func (l *QuestionLogic) GetQuestionBank(ctx context.Context, req types.GetQuesti
 	}
 	// 获取题库题目数量
 	count, err := repo.NewQuestionRepo(global.DB).GetQuestionBankQuestionCount(questionBankID)
+	// 判断是否存在PK规则
+	hasPK := repo.NewQuestionRepo(global.DB).CheckPKRuleExist(questionBankID)
 	// 返回响应
 	resp = types.GetQuestionBankResp{
 		Title:       question.Title,
 		Description: question.Description,
 		Count:       count,
 		LogoUrl:     question.LogoUrl,
+		HasPK:       hasPK,
 	}
 	return
 }

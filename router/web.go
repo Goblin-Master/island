@@ -102,6 +102,8 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.POST("/matching", middleware.Authentication, api.PKMatching)
 		rg.GET("/room-info", middleware.Authentication, api.GetRoomInfo)
 		rg.POST("/submit", middleware.Authentication, api.SubmitQuestion)
+		rg.POST("/set-rule", middleware.Authentication, api.PKSetRule)
+		rg.GET("/get-rule", middleware.Authentication, api.PKGetRule)
 	})
 
 	routeManager.RegisterUserRoutes(func(rg *gin.RouterGroup) {

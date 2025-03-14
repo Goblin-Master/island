@@ -59,3 +59,14 @@ type IslandQuestionBank struct {
 func (i *IslandQuestionBank) TableName() string {
 	return "island_question_banks"
 }
+
+type QuestionBankPKRule struct {
+	CommonModel
+	QuestionBankID int64 `json:"question_bank_id" gorm:"type:bigint;not null;uniqueIndex:idx_bank_pk_rule;comment:'题库ID'"`
+	QuestionCount  int   `json:"question_count" gorm:"type:int;not null;comment:'题目数量'"`
+	Duration       int   `json:"duration" gorm:"type:int;not null;comment:'比赛时长(秒)'"`
+}
+
+func (i *QuestionBankPKRule) TableName() string {
+	return "question_bank_pk_rules"
+}

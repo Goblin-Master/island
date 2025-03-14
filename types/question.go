@@ -73,6 +73,7 @@ type GetQuestionBankResp struct {
 	Description string `json:"description"`
 	Count       int    `json:"count"`
 	LogoUrl     string `json:"logo_url"`
+	HasPK       bool   `json:"has_pk"`
 }
 
 type LiteQuestion struct {
