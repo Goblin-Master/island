@@ -117,3 +117,26 @@ func (r *QuestionRepo) CheckQuestionBankExist(id int64) bool {
 func (r *QuestionRepo) CheckIslandExist(id int64) bool {
 	return !errors.Is(r.DB.First(&model.Island{}, id).Error, gorm.ErrRecordNotFound)
 }
+
+// PKSetRule 设置PK规则
+func (r *QuestionRepo) PKSetRule(questionBankID int64, questionCount int, duration int) error {
+	questionBankPKRule := model.QuestionBankPKRule{
+		QuestionBankID: questionBankID,
+		QuestionCount:  questionCount,
+		Duration:       duration,
+	}
+	err := r.DB.Create(&questionBankPKRule).Error
+	return err
+}
+
+// PKGetRule 获取PK规则
+func (r *QuestionRepo) PKGetRule(questionBankID int64) (model.QuestionBankPKRule, error) {
+	var questionBankPKRule model.QuestionBankPKRule
+	err := r.DB.First(&questionBankPKRule, "question_bank_id = ?", questionBankID).Error
+	return questionBankPKRule, err
+}
+
+// CheckPKRuleExist 检查PK规则是否存在
+func (r *QuestionRepo) CheckPKRuleExist(questionBankID int64) bool {
+	return !errors.Is(r.DB.First(&model.QuestionBankPKRule{}, "question_bank_id = ?", questionBankID).Error, gorm.ErrRecordNotFound)
+}

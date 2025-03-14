@@ -28,7 +28,7 @@ func GetRoomInfo(c *gin.Context) {
 		return
 	}
 	req.UserID = jwtUtils.GetUserId(c)
-	zlog.CtxInfof(ctx, "PKMatching request: %v", req)
+	zlog.CtxInfof(ctx, "GetRoomInfo request: %v", req)
 	resp, err := logic.NewPKLogic().GetRoomInfo(ctx, req)
 	response.Response(c, resp, err)
 }
@@ -40,7 +40,29 @@ func SubmitQuestion(c *gin.Context) {
 		return
 	}
 	req.UserID = jwtUtils.GetUserId(c)
-	zlog.CtxInfof(ctx, "PKMatching request: %v", req)
+	zlog.CtxInfof(ctx, "SubmitQuestion request: %v", req)
 	resp, err := logic.NewPKLogic().SubmitQuestion(ctx, req)
+	response.Response(c, resp, err)
+}
+
+func PKSetRule(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	req, err := types.BindReq[types.PKSetRuleReq](c)
+	if err != nil {
+		return
+	}
+	zlog.CtxInfof(ctx, "PKMatching request: %v", req)
+	resp, err := logic.NewPKLogic().PKSetRule(ctx, req)
+	response.Response(c, resp, err)
+}
+
+func PKGetRule(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	req, err := types.BindReq[types.PKGetRuleReq](c)
+	if err != nil {
+		return
+	}
+	zlog.CtxInfof(ctx, "PKMatching request: %v", req)
+	resp, err := logic.NewPKLogic().PKGetRule(ctx, req)
 	response.Response(c, resp, err)
 }
