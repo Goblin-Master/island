@@ -54,17 +54,17 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	})
 
 	routeManager.RegisterIslandRoutes(func(rg *gin.RouterGroup) {
-		rg.GET("/", api.GetIsland)                                  //获取岛屿列表
-		rg.POST("/", middleware.Authentication, api.CreateIsland)   //创建岛屿
-		rg.PUT("/", middleware.Authentication, api.ModifyIsland)    //修改岛屿
-		rg.DELETE("/", middleware.Authentication, api.DeleteIsland) //删除岛屿
-		rg.GET("/detail", api.IslandDetail)                         //岛屿详情
+		rg.GET("", api.GetIsland)                                  //获取岛屿列表
+		rg.POST("", middleware.Authentication, api.CreateIsland)   //创建岛屿
+		rg.PUT("", middleware.Authentication, api.ModifyIsland)    //修改岛屿
+		rg.DELETE("", middleware.Authentication, api.DeleteIsland) //删除岛屿
+		rg.GET("/detail", api.IslandDetail)                        //岛屿详情
 	})
 
 	routeManager.RegisterAiRoutes(func(rg *gin.RouterGroup) {
 		rg.POST("/analysis", middleware.Authentication, api.AiGenerateAbstract)
 		rg.GET("/chat", middleware.Authentication, api.AiChatStream)
-		rg.DELETE("/", middleware.Authentication, api.ClearHistory)
+		rg.DELETE("", middleware.Authentication, api.ClearHistory)
 	})
 
 	routeManager.RegisterQuestionRoutes(func(rg *gin.RouterGroup) {
@@ -83,9 +83,9 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	})
 
 	routeManager.RegisterArticleRoutes(func(rg *gin.RouterGroup) {
-		rg.POST("/", middleware.Authentication, api.ArticleCreate)
-		rg.GET("/", api.ArticleList)
-		rg.DELETE("/", middleware.Authentication, api.ArticleDelete)
+		rg.POST("", middleware.Authentication, api.ArticleCreate)
+		rg.GET("", api.ArticleList)
+		rg.DELETE("", middleware.Authentication, api.ArticleDelete)
 		rg.GET("/digg", middleware.Authentication, api.ArticleDigg)
 		rg.GET("/collect", middleware.Authentication, api.ArticleCollect)
 		rg.GET("/owner", middleware.Authentication, api.ArticleListByUerID)
