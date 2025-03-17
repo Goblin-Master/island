@@ -18,7 +18,7 @@ func ArticleCreate(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	zlog.CtxInfof(ctx, "CreateArticle request: %v", req)
+	zlog.CtxInfof(ctx, "CreateArticle request: %v", req.Title)
 	req.UserID = jwtUtils.GetUserId(c)
 	resp, err := logic.NewArticleLogic().ArticleCreate(ctx, req)
 	response.Response(c, resp, err)
