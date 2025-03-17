@@ -56,7 +56,7 @@ func (l *IslandLogic) CreateIsland(ctx context.Context, req types.IslandReq) (re
 	id := snowflake.GetIntId(global.Node)
 	r := repo.NewIslandRepo(global.DB)
 	if r.IdentifyIslandName(req.Name) {
-		zlog.CtxInfof(ctx, "岛屿名字重复:%v", err)
+		zlog.CtxInfof(ctx, "岛屿名字重复:%v", req.Name)
 		return types.IslandResp{}, response.ErrResp(err, response.ISLAND_EXIST)
 	}
 	var island = model.Island{
