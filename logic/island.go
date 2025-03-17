@@ -127,7 +127,11 @@ func (l *IslandLogic) DeleteIsland(ctx context.Context, req types.IslandDeleteRe
 		zlog.CtxErrorf(ctx, "类型转换:%v", err)
 		return response.ErrResp(err, response.COMMON_FAIL)
 	}
-	err = repo.NewIslandRepo(global.DB).DeleteIsland(island_id, req.UserID)
+	r := repo.NewIslandRepo(global.DB)
+	if !r.IdentifyIslandById(island_id, req.UserID) {
+		return response.ErrResp(err, response.ISLAND_NOT_DELETE)
+	}
+	err = r.DeleteIsland(island_id, req.UserID)
 	if err != nil {
 		zlog.CtxInfof(ctx, "删除岛屿失败:%v", err)
 		return response.ErrResp(err, response.ISLAND_DELETE_ERROR)

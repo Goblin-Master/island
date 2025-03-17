@@ -49,13 +49,7 @@ func (r *IslandRepo) IdentifyIslandById(id, user_id int64) (exist bool) {
 	return
 }
 func (r *IslandRepo) DeleteIsland(id, user_id int64) (err error) {
-	var island model.Island
-	err = r.DB.Where("id = ? and user_id = ?", id, user_id).Take(&island).Error
-	if err != nil {
-		return
-	}
-	err = r.DB.Delete(&island).Error
-	return
+	return r.DB.Model(&model.Island{}).Delete("id = ? and user_id = ?", id, user_id).Error
 }
 
 func (r *IslandRepo) GetIsland(island_id int64) (resp model.Island, err error) {
