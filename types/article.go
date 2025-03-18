@@ -55,3 +55,7 @@ type ArticleListReq struct {
 	UserID string `form:"user_id"`
 	list.PageInfo
 }
+
+type ArticleDetailReq struct {
+	ID string `form:"id"`
+}

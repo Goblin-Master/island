@@ -83,6 +83,7 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	})
 
 	routeManager.RegisterArticleRoutes(func(rg *gin.RouterGroup) {
+		rg.GET("/detail", middleware.Authentication, api.ArticleDetail)
 		rg.POST("", middleware.Authentication, api.ArticleCreate)
 		rg.GET("", api.ArticleList)
 		rg.DELETE("", middleware.Authentication, api.ArticleDelete)

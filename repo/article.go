@@ -130,3 +130,27 @@ func (r *ArticleRepo) DiggList(ctx context.Context, userid int64) (articleIDList
 	}
 	return
 }
+
+func (r *ArticleRepo) ArticleDetail(ctx context.Context, id int64) (resp types.Article, err error) {
+	var data model.Article
+	err = r.DB.Model(&model.Article{}).Preload("User").Where("id = ?", id).Take(&data).Error
+	if err != nil {
+		zlog.CtxErrorf(ctx, "获取文章详情失败:%v", err)
+		return types.Article{}, response.ErrResp(err, response.Article_NOT_EXIST)
+	}
+	resp = types.Article{
+		ID:           data.ID,
+		Island:       data.Island,
+		Cover:        data.Cover,
+		Abstract:     data.Abstract,
+		Content:      data.Content,
+		Title:        data.Title,
+		UserID:       data.UserID,
+		CreatedAt:    data.CreatedAt,
+		Username:     data.User.Username,
+		Avatar:       data.User.Avatar,
+		DiggCount:    data.DiggCount + articleUtils.GetCacheDigg(ctx, data.ID),
+		CollectCount: data.CollectCount + articleUtils.GetCacheCollect(ctx, data.ID),
+	}
+	return
+}

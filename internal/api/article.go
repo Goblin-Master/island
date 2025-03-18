@@ -112,3 +112,15 @@ func ArticleDiggList(c *gin.Context) {
 	resp, err := logic.NewArticleLogic().ArticleDiggList(ctx, req, jwtUtils.GetUserId(c))
 	response.Response(c, resp, err)
 }
+func ArticleDetail(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	var req types.ArticleDetailReq
+	err := c.ShouldBindQuery(&req)
+	if err != nil {
+		response.NewResponse(c).Error(response.PARAM_NOT_VALID)
+		return
+	}
+	zlog.CtxInfof(ctx, "ArticleDetail request: %v", req)
+	resp, err := logic.NewArticleLogic().ArticleDetail(ctx, req)
+	response.Response(c, resp, err)
+}

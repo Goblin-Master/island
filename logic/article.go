@@ -252,3 +252,14 @@ func (l *ArticleLogic) ArticleDiggList(ctx context.Context, req list.PageInfo, u
 	}
 	return
 }
+
+func (l *ArticleLogic) ArticleDetail(ctx context.Context, req types.ArticleDetailReq) (resp types.Article, err error) {
+	defer utils.RecordTime(time.Now())()
+	article_id, err := strconv.ParseInt(req.ID, 10, 64)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "类型转换失败 %s", err)
+		return types.Article{}, response.ErrResp(err, response.COMMON_FAIL)
+	}
+	resp, err = repo.NewArticleRepo(global.DB).ArticleDetail(ctx, article_id)
+	return
+}
