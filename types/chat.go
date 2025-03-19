@@ -8,8 +8,8 @@ type Message struct {
 }
 
 type SendMessageReq struct {
-	UserID   int64  `json:"user_id"`
-	IslandID int64  `json:"island_id"`
+	UserID   int64  `json:"-"`
+	IslandID string `json:"island_id"`
 	Message  string `json:"message"`
 }
 

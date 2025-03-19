@@ -34,6 +34,12 @@ func (l *ChatLogic) SendMessage(ctx context.Context, req types.SendMessageReq) (
 	// 生成雪花ID
 	var id int64
 	id = snowflake.GetIntId(global.Node)
+	// IslandID 转化成 int64
+	islandID, err := strconv.ParseInt(req.IslandID, 10, 64)
+	if err != nil {
+		zlog.Errorf("IslandID 转化成 int64 失败: %v", err)
+		return resp, response.ErrResp(err, response.INTERNAL_ERROR)
+	}
 	// 记录发送时间
 	timestamp := time.Now().UnixMilli()
 	resp.Timestamp = timestamp
@@ -50,14 +56,14 @@ func (l *ChatLogic) SendMessage(ctx context.Context, req types.SendMessageReq) (
 	}
 	// 往redis中写入消息
 	err = global.Rdb.ZAdd(ctx,
-		fmt.Sprintf(REDIS_CHAT_MESSAGES, req.IslandID),
+		fmt.Sprintf(REDIS_CHAT_MESSAGES, islandID),
 		&redis.Z{
 			Score:  float64(timestamp),
 			Member: messageJSON,
 		}).Err()
 	// 记录最近一次更新时间为当前时间
 	err = global.Rdb.Set(ctx,
-		fmt.Sprintf(REDIS_CHAT_UPDATE_TIME, req.IslandID),
+		fmt.Sprintf(REDIS_CHAT_UPDATE_TIME, islandID),
 		timestamp,
 		0).Err()
 	if err != nil {
@@ -67,7 +73,7 @@ func (l *ChatLogic) SendMessage(ctx context.Context, req types.SendMessageReq) (
 	// 清理redis中一分钟前的消息
 	minScore := float64(time.Now().Add(-time.Minute).UnixMilli())
 	err = global.Rdb.ZRemRangeByScore(ctx,
-		fmt.Sprintf(REDIS_CHAT_MESSAGES, req.IslandID),
+		fmt.Sprintf(REDIS_CHAT_MESSAGES, islandID),
 		"-inf",
 		fmt.Sprintf("%f", minScore)).Err()
 	if err != nil {
@@ -75,7 +81,7 @@ func (l *ChatLogic) SendMessage(ctx context.Context, req types.SendMessageReq) (
 		return resp, response.ErrResp(err, response.REDIS_ERROR)
 	}
 	// 发布新消息通知
-	err = global.Rdb.Publish(ctx, fmt.Sprintf(REDIS_CHAT_UPDATE_CHAN, req.IslandID), "have_new_message").Err()
+	err = global.Rdb.Publish(ctx, fmt.Sprintf(REDIS_CHAT_UPDATE_CHAN, islandID), "have_new_message").Err()
 	if err != nil {
 		zlog.Errorf("发布新消息通知失败: %v", err)
 		return resp, response.ErrResp(err, response.REDIS_ERROR)
