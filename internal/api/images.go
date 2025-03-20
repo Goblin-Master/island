@@ -28,11 +28,11 @@ func UploadImages(c *gin.Context) {
 		return
 	}
 	//图片大小限制
-	if fileHeader.Size > global.IMAGE_SIZE {
-		zlog.CtxErrorf(ctx, "上传图片失败: 图片大小超过限制")
-		response.NewResponse(c).Error(response.IMAGE_OVER_SIZE)
-		return
-	}
+	//if fileHeader.Size > global.IMAGE_SIZE {
+	//	zlog.CtxErrorf(ctx, "上传图片失败: 图片大小超过限制")
+	//	response.NewResponse(c).Error(response.IMAGE_OVER_SIZE)
+	//	return
+	//}
 	//图片格式限制
 	filename := fileHeader.Filename
 	suffix, err := fileUtils.ImageSuffixJudge(filename)
