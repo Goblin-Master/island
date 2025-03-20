@@ -95,7 +95,7 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	})
 
 	routeManager.RegisterChatRoutes(func(rg *gin.RouterGroup) {
-		rg.POST("/send", api.ChatSendMessage)
+		rg.POST("/send", middleware.Authentication, api.ChatSendMessage)
 		rg.GET("/get", api.ChatGetMessages)
 	})
 
