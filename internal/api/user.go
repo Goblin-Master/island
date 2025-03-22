@@ -46,3 +46,17 @@ func FocusList(c *gin.Context) {
 	resp, err := logic.NewUserLogic().FocusList(ctx, req)
 	response.Response(c, resp, err)
 }
+
+func CountFans(c *gin.Context) {
+	ctx := zlog.GetCtxFromGin(c)
+	req, err := types.BindReq[types.CountFansReq](c)
+	if err != nil {
+		return
+	}
+	if req.UserID == "" {
+		req.UserID = strconv.FormatInt(jwtUtils.GetUserId(c), 10)
+	}
+	zlog.CtxInfof(ctx, "CountFans request: %v", req)
+	resp, err := logic.NewUserLogic().CountFans(ctx, req)
+	response.Response(c, resp, err)
+}

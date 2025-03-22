@@ -31,3 +31,6 @@ type FocusListResp struct {
 	Count int         `json:"count"`
 	List  []FocusList `json:"list"`
 }
+type CountFansReq struct {
+	UserID string `form:"user_id"`
+}

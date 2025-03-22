@@ -111,6 +111,7 @@ func registerRoutes(routeManager *manager.RouteManager) {
 		rg.GET("/detail", middleware.Authentication, api.UserDetail)
 		rg.GET("/focus", middleware.Authentication, api.FocusUser)
 		rg.GET("/focus/list", middleware.Authentication, api.FocusList)
+		rg.GET("/fans", middleware.Authentication, api.CountFans)
 	})
 
 	// 两个可以用来测试的用户 Token

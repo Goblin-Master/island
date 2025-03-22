@@ -96,3 +96,18 @@ func (l *UserLogic) FocusList(ctx context.Context, req types.FocusListReq) (resp
 		List:  focusList,
 	}, nil
 }
+
+func (l *UserLogic) CountFans(ctx context.Context, req types.CountFansReq) (resp int64, err error) {
+	defer utils.RecordTime(time.Now())()
+	user_id, err := strconv.ParseInt(req.UserID, 10, 64)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "类型转换:%v", err)
+		return 0, response.ErrResp(err, response.COMMON_FAIL)
+	}
+	resp, err = repo.NewUserRepo(global.DB).CountFans(user_id)
+	if err != nil {
+		zlog.CtxErrorf(ctx, "获取用户粉丝数失败:%v", err)
+		return 0, response.ErrResp(err, response.COMMON_FAIL)
+	}
+	return
+}

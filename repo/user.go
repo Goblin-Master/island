@@ -50,3 +50,7 @@ func (r *UserRepo) FocusIDList(user_id int64) (resp []int64, err error) {
 	err = r.DB.Model(&model.Focus{}).Where("user_id = ?", user_id).Pluck("focus_id", &resp).Error
 	return
 }
+func (r *UserRepo) CountFans(user_id int64) (count int64, err error) {
+	err = r.DB.Model(&model.Focus{}).Where("focus_id = ?", user_id).Count(&count).Error
+	return
+}
