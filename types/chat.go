@@ -24,6 +24,7 @@ type GetMessagesReq struct {
 }
 
 type GetMessagesResp struct {
-	Length   int       `json:"length"`
-	Messages []Message `json:"messages"`
+	Timestamp int64     `json:"timestamp"`
+	Length    int       `json:"length"`
+	Messages  []Message `json:"messages"`
 }

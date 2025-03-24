@@ -107,6 +107,8 @@ func (l *ChatLogic) GetMessages(ctx context.Context, req types.GetMessagesReq) (
 		zlog.Errorf("清理redis中一分钟前的消息失败: %v", err)
 		return resp, response.ErrResp(err, response.REDIS_ERROR)
 	}
+	// 保存最后更新时间戳
+	resp.Timestamp, err = getLatestTimestamp(ctx, islandID)
 	// 进入判断是否更新，如果需要更新，则进行长轮询等待
 	var yes bool
 	yes, err = checkUpdate(ctx, islandID, req.Timestamp)
@@ -124,6 +126,9 @@ func (l *ChatLogic) GetMessages(ctx context.Context, req types.GetMessagesReq) (
 			Max: "+inf",
 		},
 	).Result()
+
+	// 保存最后更新时间戳
+	resp.Timestamp, err = getLatestTimestamp(ctx, islandID)
 
 	if err != nil {
 		zlog.Errorf("读取redis中的消息失败: %v", err)
@@ -190,15 +195,26 @@ func checkUpdate(ctx context.Context, islandID int64, timestamp int64) (bool, er
 	}
 }
 
-func checkUpdateByTimestamp(ctx context.Context, islandID int64, timestamp int64) (bool, error) {
+func getLatestTimestamp(ctx context.Context, islandID int64) (int64, error) {
 	// 读取最近一次更新时间
 	key := fmt.Sprintf(REDIS_CHAT_UPDATE_TIME, islandID)
 	lastUpdateTime, err := global.Rdb.Get(ctx, key).Int64()
 	if errors.Is(err, redis.Nil) {
-		return true, nil // 键不存在视为需要更新
+		return -1, nil // 键不存在
 	} else if err != nil {
 		zlog.Errorf("读取最近一次更新时间失败: %v", err)
-		return false, response.ErrResp(err, response.REDIS_ERROR)
+		return -1, response.ErrResp(err, response.REDIS_ERROR)
+	}
+	return lastUpdateTime, nil
+}
+
+func checkUpdateByTimestamp(ctx context.Context, islandID int64, timestamp int64) (bool, error) {
+	lastUpdateTime, err := getLatestTimestamp(ctx, islandID)
+	if err != nil {
+		return false, err
+	}
+	if lastUpdateTime == -1 {
+		return true, nil // 键不存在视为需要更新
 	}
 	zlog.Debugf("最近一次更新时间: %v", lastUpdateTime)
 	// 比较时间戳
