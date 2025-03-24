@@ -8,6 +8,8 @@ import (
 	"tgwp/log/zlog"
 	"tgwp/manager"
 	"tgwp/middleware"
+	"tgwp/utils/jwtUtils"
+	"time"
 )
 
 // RunServer 启动服务器 路由层
@@ -115,8 +117,8 @@ func registerRoutes(routeManager *manager.RouteManager) {
 	})
 
 	// 两个可以用来测试的用户 Token
-	//fmt.Println(jwtUtils.ForTest(1898984453741481984, time.Hour*24*365*100))
-	//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjE4OTg5ODQ0NTM3NDE0ODE5ODQsImNsYXNzIjoiYXRva2VuIiwiaXNzIjoiaXNsYW5kIiwiZXhwIjo0ODk1MjU2Nzc4LCJuYmYiOjE3NDE2NTY3Nzh9.ptTgeLknT9lR_Tbj9GIVISLRFImA_x4S-oLMdKupfqs
-	//fmt.Println(jwtUtils.ForTest(1898900897681903616, time.Hour*24*365*100))
-	//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjE4OTg5MDA4OTc2ODE5MDM2MTYsImNsYXNzIjoiYXRva2VuIiwiaXNzIjoiaXNsYW5kIiwiZXhwIjo0ODk1Mjc1OTEzLCJuYmYiOjE3NDE2NzU5MTN9.FMbMnACeKAZf5bGi02MVk6mpMAbQIChl65bAapP1o30
+	fmt.Println(jwtUtils.ForTest(1904056657692856320, time.Hour*24*365*100))
+	//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjE5MDQwNTY2NTc2OTI4NTYzMjAsImNsYXNzIjoiYXRva2VuIiwiaXNzIjoiaXNsYW5kIiwiZXhwIjo0ODk2NDE4NDk4LCJuYmYiOjE3NDI4MTg0OTh9.D2cfaMSletNLIllUdYSvmCNd8CUlD0UBJpuj8bJZBDU
+	//fmt.Println(jwtUtils.ForTest(1903807704309174272, time.Hour*24*365*100))
+	//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjE5MDM4MDc3MDQzMDkxNzQyNzIsImNsYXNzIjoiYXRva2VuIiwiaXNzIjoiaXNsYW5kIiwiZXhwIjo0ODk2NDE3OTQ1LCJuYmYiOjE3NDI4MTc5NDV9._zPGf8XuBf4yOclBD4eYNSc-qzniVODsOKcZCrAibbs
 }
