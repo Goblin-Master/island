@@ -12,6 +12,7 @@ type Config struct {
 }
 
 type ApplicationConfig struct {
+	Reload      bool   `mapstructure:"reload"`
 	Host        string `mapstructure:"host"`
 	Port        int    `mapstructure:"port"`
 	Env         string `mapstructure:"env"`
@@ -19,6 +20,7 @@ type ApplicationConfig struct {
 	ImagesPath  string `mapstructure:"imagesPath"`
 }
 type LoggerConfig struct {
+	Reload   bool   `mapstructure:"reload"`
 	Level    int8   `mapstructure:"level"`
 	Format   string `mapstructure:"format"`
 	Director string `mapstructure:"director"`
@@ -26,11 +28,13 @@ type LoggerConfig struct {
 }
 
 type DBConfig struct {
+	Reload      bool   `mapstructure:"reload"`
 	Driver      string `mapstructure:"driver"`
 	AutoMigrate bool   `mapstructure:"migrate"`
 	Dsn         string `mapstructure:"dsn"`
 }
 type RedisConfig struct {
+	Reload   bool   `mapstructure:"reload"`
 	Enable   bool   `mapstructure:"enable"`
 	Host     string `mapstructure:"host"`
 	Port     int    `mapstructure:"port"`
@@ -39,8 +43,9 @@ type RedisConfig struct {
 }
 
 type KafkaConfig struct {
-	host string `mapstructure:"host"`
-	port int    `mapstructure:"port"`
+	Reload bool   `mapstructure:"reload"`
+	host   string `mapstructure:"host"`
+	port   int    `mapstructure:"port"`
 }
 
 type QQConfig struct {
